@@ -1,0 +1,224 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/cucumber-messages"
+
+import {
+  "moonbitlang/core/json",
+}
+
+// Values
+pub let protocol_version : String
+
+// Errors
+
+// Types and methods
+pub struct Ci {
+  name : String
+  url : String?
+  buildNumber : String?
+  git : Git?
+}
+pub impl ToJson for Ci
+pub impl @json.FromJson for Ci
+
+pub struct Duration {
+  seconds : Int
+  nanos : Int
+}
+pub impl ToJson for Duration
+pub impl @json.FromJson for Duration
+
+pub enum Envelope {
+  Meta(Meta)
+  Source(Source)
+  ParseError(ParseError)
+  TestRunStarted(TestRunStarted)
+  TestRunFinished(TestRunFinished)
+  UndefinedParameterType(UndefinedParameterType)
+  TestCaseStarted(TestCaseStarted)
+  TestCaseFinished(TestCaseFinished)
+  TestStepStarted(TestStepStarted)
+  TestStepFinished(TestStepFinished)
+}
+pub impl ToJson for Envelope
+pub impl @json.FromJson for Envelope
+
+pub struct Exception {
+  type_ : String
+  message : String?
+  stackTrace : String?
+}
+pub impl ToJson for Exception
+pub impl @json.FromJson for Exception
+
+pub struct Git {
+  remote : String
+  revision : String
+  branch : String?
+  tag : String?
+}
+pub impl ToJson for Git
+pub impl @json.FromJson for Git
+
+pub struct JavaMethod {
+  className : String
+  methodName : String
+  methodParameterTypes : Array[String]
+}
+pub impl ToJson for JavaMethod
+pub impl @json.FromJson for JavaMethod
+
+pub struct JavaStackTraceElement {
+  className : String
+  fileName : String
+  methodName : String
+}
+pub impl ToJson for JavaStackTraceElement
+pub impl @json.FromJson for JavaStackTraceElement
+
+pub struct Location {
+  line : Int
+  column : Int?
+}
+pub impl ToJson for Location
+pub impl @json.FromJson for Location
+
+pub struct Meta {
+  protocolVersion : String
+  implementation : Product
+  runtime : Product
+  os : Product
+  cpu : Product
+  ci : Ci?
+}
+pub impl ToJson for Meta
+pub impl @json.FromJson for Meta
+
+pub struct ParseError {
+  source : SourceReference
+  message : String
+}
+pub impl ToJson for ParseError
+pub impl @json.FromJson for ParseError
+
+pub struct Product {
+  name : String
+  version : String?
+}
+pub impl ToJson for Product
+pub impl @json.FromJson for Product
+
+pub struct Source {
+  uri : String
+  data : String
+  mediaType : SourceMediaType
+}
+pub impl ToJson for Source
+pub impl @json.FromJson for Source
+
+pub enum SourceMediaType {
+  GherkinPlain
+  GherkinMarkdown
+}
+pub impl ToJson for SourceMediaType
+pub impl @json.FromJson for SourceMediaType
+
+pub struct SourceReference {
+  uri : String?
+  javaMethod : JavaMethod?
+  javaStackTraceElement : JavaStackTraceElement?
+  location : Location?
+}
+pub impl ToJson for SourceReference
+pub impl @json.FromJson for SourceReference
+
+pub struct TestCaseFinished {
+  testCaseStartedId : String
+  timestamp : Timestamp
+  willBeRetried : Bool
+}
+pub impl ToJson for TestCaseFinished
+pub impl @json.FromJson for TestCaseFinished
+
+pub struct TestCaseStarted {
+  attempt : Int
+  id : String
+  testCaseId : String
+  workerId : String?
+  timestamp : Timestamp
+}
+pub impl ToJson for TestCaseStarted
+pub impl @json.FromJson for TestCaseStarted
+
+pub struct TestRunFinished {
+  message : String?
+  success : Bool
+  timestamp : Timestamp
+  exception : Exception?
+  testRunStartedId : String?
+}
+pub impl ToJson for TestRunFinished
+pub impl @json.FromJson for TestRunFinished
+
+pub struct TestRunStarted {
+  timestamp : Timestamp
+  id : String?
+}
+pub impl ToJson for TestRunStarted
+pub impl @json.FromJson for TestRunStarted
+
+pub struct TestStepFinished {
+  testCaseStartedId : String
+  testStepId : String
+  testStepResult : TestStepResult
+  timestamp : Timestamp
+}
+pub impl ToJson for TestStepFinished
+pub impl @json.FromJson for TestStepFinished
+
+pub struct TestStepResult {
+  duration : Duration
+  status : TestStepResultStatus
+  message : String?
+  exception : Exception?
+}
+pub impl ToJson for TestStepResult
+pub impl @json.FromJson for TestStepResult
+
+pub enum TestStepResultStatus {
+  Unknown
+  Passed
+  Skipped
+  Pending
+  Undefined
+  Ambiguous
+  Failed
+}
+pub impl ToJson for TestStepResultStatus
+pub impl @json.FromJson for TestStepResultStatus
+
+pub struct TestStepStarted {
+  testCaseStartedId : String
+  testStepId : String
+  timestamp : Timestamp
+}
+pub impl ToJson for TestStepStarted
+pub impl @json.FromJson for TestStepStarted
+
+pub struct Timestamp {
+  seconds : Int
+  nanos : Int
+}
+pub impl ToJson for Timestamp
+pub impl @json.FromJson for Timestamp
+
+pub struct UndefinedParameterType {
+  expression : String
+  name : String
+}
+pub impl ToJson for UndefinedParameterType
+pub impl @json.FromJson for UndefinedParameterType
+
+// Type aliases
+
+// Traits
+

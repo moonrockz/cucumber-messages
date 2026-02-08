@@ -1,0 +1,23 @@
+{"meta":{"protocolVersion":"27.0.0","implementation":{"name":"cucumber-moonbit"},"runtime":{"name":"moonbit"},"os":{"name":"linux"},"cpu":{"name":"amd64"}}}
+{"source":{"uri":"features/hello.feature","data":"Feature: Hello\n  Scenario: World\n    Given a step","mediaType":"text/x.cucumber.gherkin+plain"}}
+{"gherkinDocument":{"uri":"features/hello.feature","comments":[],"feature":{"location":{"line":1},"tags":[],"language":"en","keyword":"Feature","name":"Hello","description":"","children":[{"scenario":{"location":{"line":2},"tags":[],"keyword":"Scenario","name":"World","description":"","steps":[{"location":{"line":3},"keyword":"Given ","text":"a step","id":"step-1","keywordType":"Context"}],"examples":[],"id":"scenario-1"}}]}}}
+{"pickle":{"id":"pickle-1","uri":"features/hello.feature","name":"World","language":"en","steps":[{"id":"pickle-step-1","text":"a step","astNodeIds":["step-1"],"pickleStepType":"Context"}],"tags":[],"astNodeIds":["scenario-1"]}}
+{"stepDefinition":{"id":"step-def-1","pattern":{"source":"a step","patternType":"CUCUMBER_EXPRESSION"},"sourceReference":{"uri":"steps/steps.mbt","location":{"line":5}}}}
+{"hook":{"id":"hook-1","sourceReference":{"uri":"support/hooks.mbt","location":{"line":10}},"name":"before all","hookType":"BEFORE_TEST_RUN"}}
+{"parameterType":{"id":"param-type-1","name":"color","preferForRegularExpressionMatch":true,"regularExpressions":["red|blue|green"],"useForSnippets":true,"sourceReference":{"uri":"support/params.mbt","location":{"line":1}}}}
+{"testCase":{"id":"test-case-1","pickleId":"pickle-1","testSteps":[{"id":"test-step-1","hookId":"hook-1"},{"id":"test-step-2","pickleStepId":"pickle-step-1","stepDefinitionIds":["step-def-1"],"stepMatchArgumentsLists":[{"stepMatchArguments":[]}]}]}}
+{"testRunStarted":{"timestamp":{"seconds":1700000000,"nanos":0}}}
+{"testRunHookStarted":{"id":"run-hook-started-1","testRunStartedId":"test-run-1","hookId":"hook-1","timestamp":{"seconds":1700000001,"nanos":0}}}
+{"testRunHookFinished":{"testRunHookStartedId":"run-hook-started-1","result":{"duration":{"seconds":0,"nanos":50000000},"status":"PASSED"},"timestamp":{"seconds":1700000001,"nanos":50000000}}}
+{"testCaseStarted":{"attempt":0,"id":"test-case-started-1","testCaseId":"test-case-1","timestamp":{"seconds":1700000002,"nanos":0}}}
+{"testStepStarted":{"testCaseStartedId":"test-case-started-1","testStepId":"test-step-1","timestamp":{"seconds":1700000002,"nanos":100000}}}
+{"testStepFinished":{"testCaseStartedId":"test-case-started-1","testStepId":"test-step-1","testStepResult":{"duration":{"seconds":0,"nanos":1000000},"status":"PASSED"},"timestamp":{"seconds":1700000002,"nanos":1100000}}}
+{"testStepStarted":{"testCaseStartedId":"test-case-started-1","testStepId":"test-step-2","timestamp":{"seconds":1700000002,"nanos":2000000}}}
+{"testStepFinished":{"testCaseStartedId":"test-case-started-1","testStepId":"test-step-2","testStepResult":{"duration":{"seconds":0,"nanos":5000000},"status":"PASSED"},"timestamp":{"seconds":1700000002,"nanos":7000000}}}
+{"testCaseFinished":{"testCaseStartedId":"test-case-started-1","timestamp":{"seconds":1700000003,"nanos":0},"willBeRetried":false}}
+{"testRunFinished":{"success":true,"timestamp":{"seconds":1700000004,"nanos":0}}}
+{"attachment":{"body":"Screenshot data","contentEncoding":"BASE64","mediaType":"image/png","testCaseStartedId":"test-case-started-1","testStepId":"test-step-2"}}
+{"externalAttachment":{"url":"https://example.com/report.html","mediaType":"text/html"}}
+{"parseError":{"source":{"uri":"bad.feature","location":{"line":5,"column":1}},"message":"expected: Feature, got: Scenario"}}
+{"undefinedParameterType":{"expression":"a {color} thing","name":"color"}}
+{"suggestion":{"id":"sug-1","pickleStepId":"pickle-step-1","snippets":[{"language":"moonbit","code":"fn step_a_step(world: World) -> Unit { ... }"}]}}

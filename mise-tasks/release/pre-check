@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#MISE description="Validate release readiness (tests, version, changelog)"
+set -euo pipefail
+
+echo "Running pre-release checks..."
+
+# 1. Must be on main branch
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" != "main" ]; then
+  echo "Error: Must be on main branch (current: $BRANCH)" >&2
+  exit 1
+fi
+
+# 2. Working tree must be clean
+if ! git diff --exit-code --quiet; then
+  echo "Error: Working tree has uncommitted changes" >&2
+  exit 1
+fi
+
+# 3. Code checks
+echo "Running moon check..."
+moon check
+
+# 4. Tests
+echo "Running tests..."
+moon test
+
+# 5. Formatting
+echo "Checking formatting..."
+moon fmt
+if ! git diff --exit-code --quiet; then
+  echo "Error: moon fmt produced changes. Commit formatting first." >&2
+  exit 1
+fi
+
+echo "All pre-release checks passed."
