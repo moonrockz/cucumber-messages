@@ -1,0 +1,33 @@
+#!/usr/bin/env nu
+#MISE description="Generate CCK compatibility tests from vendor/compatibility-kit samples"
+
+let samples_dir = "vendor/compatibility-kit/devkit/samples"
+let output = "src/cck_generated_test.mbt"
+
+# Collect all .ndjson files
+let ndjson_files = (glob $"($samples_dir)/**/*.ndjson" | sort)
+
+mut test_code = "// Auto-generated CCK compatibility tests.\n// Run `mise run test:cck-generate` to regenerate.\n\n"
+
+for file in $ndjson_files {
+  let sample_name = ($file | path dirname | path basename)
+  let lines = (open --raw $file | lines | where {|l| ($l | str trim | str length) > 0 })
+  let line_count = ($lines | length)
+
+  $test_code = $test_code + $"///|\ntest \"cck/($sample_name): parse ($line_count) envelopes\" {\n  let data =\n"
+
+  for line in $lines {
+    $test_code = $test_code + $"    #|($line)\n"
+  }
+
+  $test_code = $test_code + $"  let envelopes = parse_ndjson\(data\)\n"
+  $test_code = $test_code + $"  assert_eq\(envelopes.length\(\), ($line_count)\)\n"
+  # Round-trip test: serialize back to NDJSON and re-parse
+  $test_code = $test_code + "  let ndjson = envelopes_to_ndjson(envelopes)\n"
+  $test_code = $test_code + "  let back = parse_ndjson(ndjson)\n"
+  $test_code = $test_code + $"  assert_eq\(back.length\(\), ($line_count)\)\n"
+  $test_code = $test_code + "}\n\n"
+}
+
+$test_code | save --force $output
+print $"Generated ($ndjson_files | length) CCK tests in ($output)"

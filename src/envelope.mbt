@@ -235,7 +235,7 @@ test "envelope hook roundtrip" {
 
 ///|
 test "envelope step definition roundtrip" {
-  let raw = "{\"stepDefinition\":{\"id\":\"sd2\",\"pattern\":{\"source\":\"^given$\",\"patternType\":\"REGULAR_EXPRESSION\"},\"sourceReference\":{}}}"
+  let raw = "{\"stepDefinition\":{\"id\":\"sd2\",\"pattern\":{\"source\":\"^given$\",\"type\":\"REGULAR_EXPRESSION\"},\"sourceReference\":{}}}"
   let json = @json.parse(raw) catch { _ => panic() }
   let env : Envelope = @json.from_json(json) catch { _ => panic() }
   match env {

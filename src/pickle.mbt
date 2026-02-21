@@ -70,13 +70,67 @@ pub impl ToJson for PickleStepType with to_json(self) {
 
 ///|
 /// PickleStep: a step in a pickle.
+/// Note: JSON key is "type" (not "pickleStepType") to match upstream schema.
 pub struct PickleStep {
   id : String
   text : String
   astNodeIds : Array[String]
-  pickleStepType : PickleStepType?
+  type_ : PickleStepType?
   argument : PickleStepArgument?
-} derive(ToJson, FromJson)
+}
+
+///|
+pub impl @json.FromJson for PickleStep with from_json(json, path) {
+  guard json is Object(obj) else {
+    raise @json.JsonDecodeError(
+      (path, "PickleStep::from_json: expected object"),
+    )
+  }
+  let id : String = match obj.get("id") {
+    Some(v) => @json.from_json(v, path=path.add_key("id"))
+    None =>
+      raise @json.JsonDecodeError((path, "PickleStep::from_json: missing id"))
+  }
+  let text : String = match obj.get("text") {
+    Some(v) => @json.from_json(v, path=path.add_key("text"))
+    None =>
+      raise @json.JsonDecodeError((path, "PickleStep::from_json: missing text"))
+  }
+  let astNodeIds : Array[String] = match obj.get("astNodeIds") {
+    Some(v) => @json.from_json(v, path=path.add_key("astNodeIds"))
+    None =>
+      raise @json.JsonDecodeError(
+        (path, "PickleStep::from_json: missing astNodeIds"),
+      )
+  }
+  let type_ : PickleStepType? = match obj.get("type") {
+    Some(Null) | None => None
+    Some(v) => Some(@json.from_json(v, path=path.add_key("type")))
+  }
+  let argument : PickleStepArgument? = match obj.get("argument") {
+    Some(Null) | None => None
+    Some(v) => Some(@json.from_json(v, path=path.add_key("argument")))
+  }
+  PickleStep::{ id, text, astNodeIds, type_, argument }
+}
+
+///|
+pub impl ToJson for PickleStep with to_json(self) {
+  let o : Map[String, Json] = {
+    "id": self.id.to_json(),
+    "text": self.text.to_json(),
+    "astNodeIds": self.astNodeIds.to_json(),
+  }
+  match self.type_ {
+    Some(t) => o.set("type", t.to_json())
+    None => ()
+  }
+  match self.argument {
+    Some(a) => o.set("argument", a.to_json())
+    None => ()
+  }
+  o.to_json()
+}
 
 ///|
 /// PickleTag: a tag in a pickle.

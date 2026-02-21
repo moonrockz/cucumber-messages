@@ -34,10 +34,44 @@ pub impl ToJson for StepDefinitionPatternType with to_json(self) {
 
 ///|
 /// StepDefinitionPattern: pattern for a step definition.
+/// Note: JSON key is "type" (not "patternType") to match upstream schema.
 pub struct StepDefinitionPattern {
   source : String
-  patternType : StepDefinitionPatternType
-} derive(ToJson, FromJson)
+  type_ : StepDefinitionPatternType
+}
+
+///|
+pub impl @json.FromJson for StepDefinitionPattern with from_json(json, path) {
+  guard json is Object(obj) else {
+    raise @json.JsonDecodeError(
+      (path, "StepDefinitionPattern::from_json: expected object"),
+    )
+  }
+  let source = match obj.get("source") {
+    Some(v) => @json.from_json(v, path=path.add_key("source"))
+    None =>
+      raise @json.JsonDecodeError(
+        (path, "StepDefinitionPattern::from_json: missing source"),
+      )
+  }
+  let type_ = match obj.get("type") {
+    Some(v) => @json.from_json(v, path=path.add_key("type"))
+    None =>
+      raise @json.JsonDecodeError(
+        (path, "StepDefinitionPattern::from_json: missing type"),
+      )
+  }
+  StepDefinitionPattern::{ source, type_ }
+}
+
+///|
+pub impl ToJson for StepDefinitionPattern with to_json(self) {
+  let o : Map[String, Json] = {
+    "source": self.source.to_json(),
+    "type": self.type_.to_json(),
+  }
+  o.to_json()
+}
 
 ///|
 /// StepDefinition: step definition with pattern and source reference.
@@ -88,7 +122,7 @@ test "step definition pattern type roundtrip" {
 
 ///|
 test "step definition roundtrip" {
-  let raw = "{\"id\":\"sd1\",\"pattern\":{\"source\":\"I have {int} cukes\",\"patternType\":\"CUCUMBER_EXPRESSION\"},\"sourceReference\":{}}"
+  let raw = "{\"id\":\"sd1\",\"pattern\":{\"source\":\"I have {int} cukes\",\"type\":\"CUCUMBER_EXPRESSION\"},\"sourceReference\":{}}"
   let json = @json.parse(raw) catch { _ => panic() }
   let sd : StepDefinition = @json.from_json(json) catch { _ => panic() }
   assert_eq(sd.id, "sd1")
