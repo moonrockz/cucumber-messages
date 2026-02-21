@@ -1,0 +1,3 @@
+[submodule "vendor/compatibility-kit"]
+	path = vendor/compatibility-kit
+	url = https://github.com/cucumber/compatibility-kit.git

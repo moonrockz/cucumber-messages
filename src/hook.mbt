@@ -42,13 +42,66 @@ pub impl ToJson for HookType with to_json(self) {
 
 ///|
 /// Hook: before/after hook definition.
+/// Note: JSON key is "type" (not "hookType") to match upstream schema.
 pub struct Hook {
   id : String
   sourceReference : SourceReference
   name : String?
   tagExpression : String?
-  hookType : HookType?
-} derive(ToJson, FromJson)
+  type_ : HookType?
+}
+
+///|
+pub impl @json.FromJson for Hook with from_json(json, path) {
+  guard json is Object(obj) else {
+    raise @json.JsonDecodeError((path, "Hook::from_json: expected object"))
+  }
+  let id : String = match obj.get("id") {
+    Some(v) => @json.from_json(v, path=path.add_key("id"))
+    None => raise @json.JsonDecodeError((path, "Hook::from_json: missing id"))
+  }
+  let sourceReference : SourceReference = match obj.get("sourceReference") {
+    Some(v) => @json.from_json(v, path=path.add_key("sourceReference"))
+    None =>
+      raise @json.JsonDecodeError(
+        (path, "Hook::from_json: missing sourceReference"),
+      )
+  }
+  let name : String? = match obj.get("name") {
+    Some(Null) | None => None
+    Some(v) => Some(@json.from_json(v, path=path.add_key("name")))
+  }
+  let tagExpression : String? = match obj.get("tagExpression") {
+    Some(Null) | None => None
+    Some(v) => Some(@json.from_json(v, path=path.add_key("tagExpression")))
+  }
+  let type_ : HookType? = match obj.get("type") {
+    Some(Null) | None => None
+    Some(v) => Some(@json.from_json(v, path=path.add_key("type")))
+  }
+  Hook::{ id, sourceReference, name, tagExpression, type_ }
+}
+
+///|
+pub impl ToJson for Hook with to_json(self) {
+  let o : Map[String, Json] = {
+    "id": self.id.to_json(),
+    "sourceReference": self.sourceReference.to_json(),
+  }
+  match self.name {
+    Some(n) => o.set("name", n.to_json())
+    None => ()
+  }
+  match self.tagExpression {
+    Some(te) => o.set("tagExpression", te.to_json())
+    None => ()
+  }
+  match self.type_ {
+    Some(t) => o.set("type", t.to_json())
+    None => ()
+  }
+  o.to_json()
+}
 
 ///|
 /// TestRunHookStarted: hook execution lifecycle.

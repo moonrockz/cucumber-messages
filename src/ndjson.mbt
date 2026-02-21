@@ -117,9 +117,9 @@ test "fixture all_variants ndjson roundtrip" {
     #|{"meta":{"protocolVersion":"27.0.0","implementation":{"name":"cucumber-moonbit"},"runtime":{"name":"moonbit"},"os":{"name":"linux"},"cpu":{"name":"amd64"}}}
     #|{"source":{"uri":"features/hello.feature","data":"Feature: Hello\n  Scenario: World\n    Given a step","mediaType":"text/x.cucumber.gherkin+plain"}}
     #|{"gherkinDocument":{"uri":"features/hello.feature","comments":[],"feature":{"location":{"line":1},"tags":[],"language":"en","keyword":"Feature","name":"Hello","description":"","children":[{"scenario":{"location":{"line":2},"tags":[],"keyword":"Scenario","name":"World","description":"","steps":[{"location":{"line":3},"keyword":"Given ","text":"a step","id":"step-1","keywordType":"Context"}],"examples":[],"id":"scenario-1"}}]}}}
-    #|{"pickle":{"id":"pickle-1","uri":"features/hello.feature","name":"World","language":"en","steps":[{"id":"pickle-step-1","text":"a step","astNodeIds":["step-1"],"pickleStepType":"Context"}],"tags":[],"astNodeIds":["scenario-1"]}}
-    #|{"stepDefinition":{"id":"step-def-1","pattern":{"source":"a step","patternType":"CUCUMBER_EXPRESSION"},"sourceReference":{"uri":"steps/steps.mbt","location":{"line":5}}}}
-    #|{"hook":{"id":"hook-1","sourceReference":{"uri":"support/hooks.mbt","location":{"line":10}},"name":"before all","hookType":"BEFORE_TEST_RUN"}}
+    #|{"pickle":{"id":"pickle-1","uri":"features/hello.feature","name":"World","language":"en","steps":[{"id":"pickle-step-1","text":"a step","astNodeIds":["step-1"],"type":"Context"}],"tags":[],"astNodeIds":["scenario-1"]}}
+    #|{"stepDefinition":{"id":"step-def-1","pattern":{"source":"a step","type":"CUCUMBER_EXPRESSION"},"sourceReference":{"uri":"steps/steps.mbt","location":{"line":5}}}}
+    #|{"hook":{"id":"hook-1","sourceReference":{"uri":"support/hooks.mbt","location":{"line":10}},"name":"before all","type":"BEFORE_TEST_RUN"}}
     #|{"parameterType":{"id":"param-type-1","name":"color","preferForRegularExpressionMatch":true,"regularExpressions":["red|blue|green"],"useForSnippets":true,"sourceReference":{"uri":"support/params.mbt","location":{"line":1}}}}
     #|{"testCase":{"id":"test-case-1","pickleId":"pickle-1","testSteps":[{"id":"test-step-1","hookId":"hook-1"},{"id":"test-step-2","pickleStepId":"pickle-step-1","stepDefinitionIds":["step-def-1"],"stepMatchArgumentsLists":[{"stepMatchArguments":[]}]}]}}
     #|{"testRunStarted":{"timestamp":{"seconds":1700000000,"nanos":0}}}
