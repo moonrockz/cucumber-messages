@@ -6,11 +6,51 @@ import {
 }
 
 // Values
+pub fn envelopes_to_ndjson(Array[Envelope]) -> String
+
+pub fn parse_ndjson(String) -> Array[Envelope] raise
+
+pub fn parse_ndjson_line(String) -> Envelope raise
+
 pub let protocol_version : String
 
 // Errors
 
 // Types and methods
+pub struct Attachment {
+  body : String
+  contentEncoding : AttachmentContentEncoding
+  mediaType : String
+  fileName : String?
+  source : Source?
+  testCaseStartedId : String?
+  testStepId : String?
+  url : String?
+  testRunStartedId : String?
+  testRunHookStartedId : String?
+  timestamp : Timestamp?
+}
+pub impl ToJson for Attachment
+pub impl @json.FromJson for Attachment
+
+pub enum AttachmentContentEncoding {
+  Identity
+  Base64
+}
+pub impl ToJson for AttachmentContentEncoding
+pub impl @json.FromJson for AttachmentContentEncoding
+
+pub struct Background {
+  location : Location
+  keyword : String
+  name : String
+  description : String
+  steps : Array[Step]
+  id : String
+}
+pub impl ToJson for Background
+pub impl @json.FromJson for Background
+
 pub struct Ci {
   name : String
   url : String?
@@ -19,6 +59,29 @@ pub struct Ci {
 }
 pub impl ToJson for Ci
 pub impl @json.FromJson for Ci
+
+pub struct Comment {
+  location : Location
+  text : String
+}
+pub impl ToJson for Comment
+pub impl @json.FromJson for Comment
+
+pub struct DataTable {
+  location : Location
+  rows : Array[TableRow]
+}
+pub impl ToJson for DataTable
+pub impl @json.FromJson for DataTable
+
+pub struct DocString {
+  location : Location
+  content : String
+  delimiter : String
+  mediaType : String?
+}
+pub impl ToJson for DocString
+pub impl @json.FromJson for DocString
 
 pub struct Duration {
   seconds : Int
@@ -38,9 +101,34 @@ pub enum Envelope {
   TestCaseFinished(TestCaseFinished)
   TestStepStarted(TestStepStarted)
   TestStepFinished(TestStepFinished)
+  Attachment(Attachment)
+  ExternalAttachment(ExternalAttachment)
+  Hook(Hook)
+  StepDefinition(StepDefinition)
+  ParameterType(ParameterType)
+  Suggestion(Suggestion)
+  TestRunHookStarted(TestRunHookStarted)
+  TestRunHookFinished(TestRunHookFinished)
+  GherkinDocument(GherkinDocument)
+  Pickle(Pickle)
+  TestCase(TestCase)
 }
+pub fn Envelope::to_ndjson_line(Self) -> String
 pub impl ToJson for Envelope
 pub impl @json.FromJson for Envelope
+
+pub struct Examples {
+  location : Location
+  tags : Array[Tag]
+  keyword : String
+  name : String
+  description : String
+  tableHeader : TableRow?
+  tableBody : Array[TableRow]
+  id : String
+}
+pub impl ToJson for Examples
+pub impl @json.FromJson for Examples
 
 pub struct Exception {
   type_ : String
@@ -50,6 +138,45 @@ pub struct Exception {
 pub impl ToJson for Exception
 pub impl @json.FromJson for Exception
 
+pub struct ExternalAttachment {
+  url : String
+  mediaType : String
+  testCaseStartedId : String?
+  testStepId : String?
+  testRunHookStartedId : String?
+  timestamp : Timestamp?
+}
+pub impl ToJson for ExternalAttachment
+pub impl @json.FromJson for ExternalAttachment
+
+pub struct Feature {
+  location : Location
+  tags : Array[Tag]
+  language : String
+  keyword : String
+  name : String
+  description : String
+  children : Array[FeatureChild]
+}
+pub impl ToJson for Feature
+pub impl @json.FromJson for Feature
+
+pub struct FeatureChild {
+  rule : Rule?
+  background : Background?
+  scenario : Scenario?
+}
+pub impl ToJson for FeatureChild
+pub impl @json.FromJson for FeatureChild
+
+pub struct GherkinDocument {
+  uri : String?
+  feature : Feature?
+  comments : Array[Comment]
+}
+pub impl ToJson for GherkinDocument
+pub impl @json.FromJson for GherkinDocument
+
 pub struct Git {
   remote : String
   revision : String
@@ -58,6 +185,35 @@ pub struct Git {
 }
 pub impl ToJson for Git
 pub impl @json.FromJson for Git
+
+pub struct Group {
+  children : Array[Group]?
+  start : Int?
+  value : String?
+}
+pub impl ToJson for Group
+pub impl @json.FromJson for Group
+
+pub struct Hook {
+  id : String
+  sourceReference : SourceReference
+  name : String?
+  tagExpression : String?
+  type_ : HookType?
+}
+pub impl ToJson for Hook
+pub impl @json.FromJson for Hook
+
+pub enum HookType {
+  BeforeTestRun
+  AfterTestRun
+  BeforeTestCase
+  AfterTestCase
+  BeforeTestStep
+  AfterTestStep
+}
+pub impl ToJson for HookType
+pub impl @json.FromJson for HookType
 
 pub struct JavaMethod {
   className : String
@@ -74,6 +230,16 @@ pub struct JavaStackTraceElement {
 }
 pub impl ToJson for JavaStackTraceElement
 pub impl @json.FromJson for JavaStackTraceElement
+
+pub enum KeywordType {
+  Unknown
+  Context
+  Action
+  Outcome
+  Conjunction
+}
+pub impl ToJson for KeywordType
+pub impl @json.FromJson for KeywordType
 
 pub struct Location {
   line : Int
@@ -93,6 +259,17 @@ pub struct Meta {
 pub impl ToJson for Meta
 pub impl @json.FromJson for Meta
 
+pub struct ParameterType {
+  id : String
+  name : String
+  preferForRegularExpressionMatch : Bool
+  regularExpressions : Array[String]
+  useForSnippets : Bool
+  sourceReference : SourceReference?
+}
+pub impl ToJson for ParameterType
+pub impl @json.FromJson for ParameterType
+
 pub struct ParseError {
   source : SourceReference
   message : String
@@ -100,12 +277,122 @@ pub struct ParseError {
 pub impl ToJson for ParseError
 pub impl @json.FromJson for ParseError
 
+pub(all) struct Pickle {
+  id : String
+  uri : String
+  name : String
+  language : String
+  steps : Array[PickleStep]
+  tags : Array[PickleTag]
+  astNodeIds : Array[String]
+  location : Location?
+}
+pub impl ToJson for Pickle
+pub impl @json.FromJson for Pickle
+
+pub(all) struct PickleDocString {
+  content : String
+  mediaType : String?
+}
+pub impl ToJson for PickleDocString
+pub impl @json.FromJson for PickleDocString
+
+pub(all) struct PickleStep {
+  id : String
+  text : String
+  astNodeIds : Array[String]
+  type_ : PickleStepType?
+  argument : PickleStepArgument?
+}
+pub impl ToJson for PickleStep
+pub impl @json.FromJson for PickleStep
+
+pub(all) struct PickleStepArgument {
+  docString : PickleDocString?
+  dataTable : PickleTable?
+}
+pub impl ToJson for PickleStepArgument
+pub impl @json.FromJson for PickleStepArgument
+
+pub(all) enum PickleStepType {
+  Unknown
+  Context
+  Action
+  Outcome
+}
+pub impl ToJson for PickleStepType
+pub impl @json.FromJson for PickleStepType
+
+pub(all) struct PickleTable {
+  rows : Array[PickleTableRow]
+}
+pub impl ToJson for PickleTable
+pub impl @json.FromJson for PickleTable
+
+pub(all) struct PickleTableCell {
+  value : String
+}
+pub impl ToJson for PickleTableCell
+pub impl @json.FromJson for PickleTableCell
+
+pub(all) struct PickleTableRow {
+  cells : Array[PickleTableCell]
+}
+pub impl ToJson for PickleTableRow
+pub impl @json.FromJson for PickleTableRow
+
+pub(all) struct PickleTag {
+  name : String
+  astNodeId : String
+}
+pub impl ToJson for PickleTag
+pub impl @json.FromJson for PickleTag
+
 pub struct Product {
   name : String
   version : String?
 }
 pub impl ToJson for Product
 pub impl @json.FromJson for Product
+
+pub struct Rule {
+  location : Location
+  tags : Array[Tag]
+  keyword : String
+  name : String
+  description : String
+  children : Array[RuleChild]
+  id : String
+}
+pub impl ToJson for Rule
+pub impl @json.FromJson for Rule
+
+pub struct RuleChild {
+  background : Background?
+  scenario : Scenario?
+}
+pub impl ToJson for RuleChild
+pub impl @json.FromJson for RuleChild
+
+pub struct Scenario {
+  location : Location
+  tags : Array[Tag]
+  keyword : String
+  name : String
+  description : String
+  steps : Array[Step]
+  examples : Array[Examples]
+  id : String
+}
+pub impl ToJson for Scenario
+pub impl @json.FromJson for Scenario
+
+pub struct Snippet {
+  language : String
+  code : String
+}
+pub impl ToJson for Snippet
+pub impl @json.FromJson for Snippet
 
 pub struct Source {
   uri : String
@@ -130,6 +417,93 @@ pub struct SourceReference {
 }
 pub impl ToJson for SourceReference
 pub impl @json.FromJson for SourceReference
+
+pub struct Step {
+  location : Location
+  keyword : String
+  text : String
+  id : String
+  keywordType : KeywordType?
+  docString : DocString?
+  dataTable : DataTable?
+}
+pub impl ToJson for Step
+pub impl @json.FromJson for Step
+
+pub struct StepDefinition {
+  id : String
+  pattern : StepDefinitionPattern
+  sourceReference : SourceReference
+}
+pub impl ToJson for StepDefinition
+pub impl @json.FromJson for StepDefinition
+
+pub struct StepDefinitionPattern {
+  source : String
+  type_ : StepDefinitionPatternType
+}
+pub impl ToJson for StepDefinitionPattern
+pub impl @json.FromJson for StepDefinitionPattern
+
+pub enum StepDefinitionPatternType {
+  CucumberExpression
+  RegularExpression
+}
+pub impl ToJson for StepDefinitionPatternType
+pub impl @json.FromJson for StepDefinitionPatternType
+
+pub struct StepMatchArgument {
+  group : Group
+  parameterTypeName : String?
+}
+pub impl ToJson for StepMatchArgument
+pub impl @json.FromJson for StepMatchArgument
+
+pub struct StepMatchArgumentsList {
+  stepMatchArguments : Array[StepMatchArgument]
+}
+pub impl ToJson for StepMatchArgumentsList
+pub impl @json.FromJson for StepMatchArgumentsList
+
+pub struct Suggestion {
+  id : String
+  pickleStepId : String
+  snippets : Array[Snippet]
+}
+pub impl ToJson for Suggestion
+pub impl @json.FromJson for Suggestion
+
+pub struct TableCell {
+  location : Location
+  value : String
+}
+pub impl ToJson for TableCell
+pub impl @json.FromJson for TableCell
+
+pub struct TableRow {
+  location : Location
+  cells : Array[TableCell]
+  id : String
+}
+pub impl ToJson for TableRow
+pub impl @json.FromJson for TableRow
+
+pub struct Tag {
+  location : Location
+  name : String
+  id : String
+}
+pub impl ToJson for Tag
+pub impl @json.FromJson for Tag
+
+pub struct TestCase {
+  id : String
+  pickleId : String
+  testSteps : Array[TestStep]
+  testRunStartedId : String?
+}
+pub impl ToJson for TestCase
+pub impl @json.FromJson for TestCase
 
 pub struct TestCaseFinished {
   testCaseStartedId : String
@@ -159,12 +533,40 @@ pub struct TestRunFinished {
 pub impl ToJson for TestRunFinished
 pub impl @json.FromJson for TestRunFinished
 
+pub struct TestRunHookFinished {
+  testRunHookStartedId : String
+  result : TestStepResult
+  timestamp : Timestamp
+}
+pub impl ToJson for TestRunHookFinished
+pub impl @json.FromJson for TestRunHookFinished
+
+pub struct TestRunHookStarted {
+  id : String
+  testRunStartedId : String
+  hookId : String
+  timestamp : Timestamp
+  workerId : String?
+}
+pub impl ToJson for TestRunHookStarted
+pub impl @json.FromJson for TestRunHookStarted
+
 pub struct TestRunStarted {
   timestamp : Timestamp
   id : String?
 }
 pub impl ToJson for TestRunStarted
 pub impl @json.FromJson for TestRunStarted
+
+pub struct TestStep {
+  id : String
+  hookId : String?
+  pickleStepId : String?
+  stepDefinitionIds : Array[String]?
+  stepMatchArgumentsLists : Array[StepMatchArgumentsList]?
+}
+pub impl ToJson for TestStep
+pub impl @json.FromJson for TestStep
 
 pub struct TestStepFinished {
   testCaseStartedId : String

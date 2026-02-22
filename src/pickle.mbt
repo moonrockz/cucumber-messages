@@ -1,38 +1,38 @@
 ///|
 /// PickleTableCell: a cell in a pickle data table.
-pub struct PickleTableCell {
+pub(all) struct PickleTableCell {
   value : String
 } derive(ToJson, FromJson)
 
 ///|
 /// PickleTableRow: a row in a pickle data table.
-pub struct PickleTableRow {
+pub(all) struct PickleTableRow {
   cells : Array[PickleTableCell]
 } derive(ToJson, FromJson)
 
 ///|
 /// PickleTable: a data table in a pickle step.
-pub struct PickleTable {
+pub(all) struct PickleTable {
   rows : Array[PickleTableRow]
 } derive(ToJson, FromJson)
 
 ///|
 /// PickleDocString: a doc string in a pickle step.
-pub struct PickleDocString {
+pub(all) struct PickleDocString {
   content : String
   mediaType : String?
 } derive(ToJson, FromJson)
 
 ///|
 /// PickleStepArgument: argument for a pickle step.
-pub struct PickleStepArgument {
+pub(all) struct PickleStepArgument {
   docString : PickleDocString?
   dataTable : PickleTable?
 } derive(ToJson, FromJson)
 
 ///|
 /// PickleStepType: type of a pickle step.
-pub enum PickleStepType {
+pub(all) enum PickleStepType {
   Unknown
   Context
   Action
@@ -71,7 +71,7 @@ pub impl ToJson for PickleStepType with to_json(self) {
 ///|
 /// PickleStep: a step in a pickle.
 /// Note: JSON key is "type" (not "pickleStepType") to match upstream schema.
-pub struct PickleStep {
+pub(all) struct PickleStep {
   id : String
   text : String
   astNodeIds : Array[String]
@@ -134,14 +134,14 @@ pub impl ToJson for PickleStep with to_json(self) {
 
 ///|
 /// PickleTag: a tag in a pickle.
-pub struct PickleTag {
+pub(all) struct PickleTag {
   name : String
   astNodeId : String
 } derive(ToJson, FromJson)
 
 ///|
 /// Pickle: compiled test case from a scenario.
-pub struct Pickle {
+pub(all) struct Pickle {
   id : String
   uri : String
   name : String
