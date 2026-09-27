@@ -29,14 +29,14 @@ pub struct Attachment {
   testRunStartedId : String?
   testRunHookStartedId : String?
   timestamp : Timestamp?
-}
-pub impl ToJson for Attachment
-pub impl @json.FromJson for Attachment
+} derive(ToJson, @json.FromJson)
+pub fn Attachment::to_json(Self) -> Json
 
 pub enum AttachmentContentEncoding {
   Identity
   Base64
 }
+pub fn AttachmentContentEncoding::to_json(Self) -> Json
 pub impl ToJson for AttachmentContentEncoding
 pub impl @json.FromJson for AttachmentContentEncoding
 
@@ -47,48 +47,42 @@ pub struct Background {
   description : String
   steps : Array[Step]
   id : String
-}
-pub impl ToJson for Background
-pub impl @json.FromJson for Background
+} derive(ToJson, @json.FromJson)
+pub fn Background::to_json(Self) -> Json
 
 pub struct Ci {
   name : String
   url : String?
   buildNumber : String?
   git : Git?
-}
-pub impl ToJson for Ci
-pub impl @json.FromJson for Ci
+} derive(ToJson, @json.FromJson)
+pub fn Ci::to_json(Self) -> Json
 
 pub struct Comment {
   location : Location
   text : String
-}
-pub impl ToJson for Comment
-pub impl @json.FromJson for Comment
+} derive(ToJson, @json.FromJson)
+pub fn Comment::to_json(Self) -> Json
 
 pub struct DataTable {
   location : Location
   rows : Array[TableRow]
-}
-pub impl ToJson for DataTable
-pub impl @json.FromJson for DataTable
+} derive(ToJson, @json.FromJson)
+pub fn DataTable::to_json(Self) -> Json
 
 pub struct DocString {
   location : Location
   content : String
   delimiter : String
   mediaType : String?
-}
-pub impl ToJson for DocString
-pub impl @json.FromJson for DocString
+} derive(ToJson, @json.FromJson)
+pub fn DocString::to_json(Self) -> Json
 
 pub struct Duration {
   seconds : Int
   nanos : Int
-}
-pub impl ToJson for Duration
-pub impl @json.FromJson for Duration
+} derive(ToJson, @json.FromJson)
+pub fn Duration::to_json(Self) -> Json
 
 pub enum Envelope {
   Meta(Meta)
@@ -113,6 +107,7 @@ pub enum Envelope {
   Pickle(Pickle)
   TestCase(TestCase)
 }
+pub fn Envelope::to_json(Self) -> Json
 pub fn Envelope::to_ndjson_line(Self) -> String
 pub impl ToJson for Envelope
 pub impl @json.FromJson for Envelope
@@ -126,15 +121,15 @@ pub struct Examples {
   tableHeader : TableRow?
   tableBody : Array[TableRow]
   id : String
-}
-pub impl ToJson for Examples
-pub impl @json.FromJson for Examples
+} derive(ToJson, @json.FromJson)
+pub fn Examples::to_json(Self) -> Json
 
 pub struct Exception {
   type_ : String
   message : String?
   stackTrace : String?
 }
+pub fn Exception::to_json(Self) -> Json
 pub impl ToJson for Exception
 pub impl @json.FromJson for Exception
 
@@ -145,9 +140,8 @@ pub struct ExternalAttachment {
   testStepId : String?
   testRunHookStartedId : String?
   timestamp : Timestamp?
-}
-pub impl ToJson for ExternalAttachment
-pub impl @json.FromJson for ExternalAttachment
+} derive(ToJson, @json.FromJson)
+pub fn ExternalAttachment::to_json(Self) -> Json
 
 pub struct Feature {
   location : Location
@@ -157,42 +151,37 @@ pub struct Feature {
   name : String
   description : String
   children : Array[FeatureChild]
-}
-pub impl ToJson for Feature
-pub impl @json.FromJson for Feature
+} derive(ToJson, @json.FromJson)
+pub fn Feature::to_json(Self) -> Json
 
 pub struct FeatureChild {
   rule : Rule?
   background : Background?
   scenario : Scenario?
-}
-pub impl ToJson for FeatureChild
-pub impl @json.FromJson for FeatureChild
+} derive(ToJson, @json.FromJson)
+pub fn FeatureChild::to_json(Self) -> Json
 
 pub struct GherkinDocument {
   uri : String?
   feature : Feature?
   comments : Array[Comment]
-}
-pub impl ToJson for GherkinDocument
-pub impl @json.FromJson for GherkinDocument
+} derive(ToJson, @json.FromJson)
+pub fn GherkinDocument::to_json(Self) -> Json
 
 pub struct Git {
   remote : String
   revision : String
   branch : String?
   tag : String?
-}
-pub impl ToJson for Git
-pub impl @json.FromJson for Git
+} derive(ToJson, @json.FromJson)
+pub fn Git::to_json(Self) -> Json
 
 pub struct Group {
   children : Array[Group]?
   start : Int?
   value : String?
-}
-pub impl ToJson for Group
-pub impl @json.FromJson for Group
+} derive(ToJson, @json.FromJson)
+pub fn Group::to_json(Self) -> Json
 
 pub struct Hook {
   id : String
@@ -201,6 +190,7 @@ pub struct Hook {
   tagExpression : String?
   type_ : HookType?
 }
+pub fn Hook::to_json(Self) -> Json
 pub impl ToJson for Hook
 pub impl @json.FromJson for Hook
 
@@ -212,6 +202,7 @@ pub enum HookType {
   BeforeTestStep
   AfterTestStep
 }
+pub fn HookType::to_json(Self) -> Json
 pub impl ToJson for HookType
 pub impl @json.FromJson for HookType
 
@@ -219,17 +210,15 @@ pub struct JavaMethod {
   className : String
   methodName : String
   methodParameterTypes : Array[String]
-}
-pub impl ToJson for JavaMethod
-pub impl @json.FromJson for JavaMethod
+} derive(ToJson, @json.FromJson)
+pub fn JavaMethod::to_json(Self) -> Json
 
 pub struct JavaStackTraceElement {
   className : String
   fileName : String
   methodName : String
-}
-pub impl ToJson for JavaStackTraceElement
-pub impl @json.FromJson for JavaStackTraceElement
+} derive(ToJson, @json.FromJson)
+pub fn JavaStackTraceElement::to_json(Self) -> Json
 
 pub enum KeywordType {
   Unknown
@@ -238,15 +227,15 @@ pub enum KeywordType {
   Outcome
   Conjunction
 }
+pub fn KeywordType::to_json(Self) -> Json
 pub impl ToJson for KeywordType
 pub impl @json.FromJson for KeywordType
 
 pub struct Location {
   line : Int
   column : Int?
-}
-pub impl ToJson for Location
-pub impl @json.FromJson for Location
+} derive(ToJson, @json.FromJson)
+pub fn Location::to_json(Self) -> Json
 
 pub struct Meta {
   protocolVersion : String
@@ -255,9 +244,8 @@ pub struct Meta {
   os : Product
   cpu : Product
   ci : Ci?
-}
-pub impl ToJson for Meta
-pub impl @json.FromJson for Meta
+} derive(ToJson, @json.FromJson)
+pub fn Meta::to_json(Self) -> Json
 
 pub struct ParameterType {
   id : String
@@ -266,16 +254,14 @@ pub struct ParameterType {
   regularExpressions : Array[String]
   useForSnippets : Bool
   sourceReference : SourceReference?
-}
-pub impl ToJson for ParameterType
-pub impl @json.FromJson for ParameterType
+} derive(ToJson, @json.FromJson)
+pub fn ParameterType::to_json(Self) -> Json
 
 pub struct ParseError {
   source : SourceReference
   message : String
-}
-pub impl ToJson for ParseError
-pub impl @json.FromJson for ParseError
+} derive(ToJson, @json.FromJson)
+pub fn ParseError::to_json(Self) -> Json
 
 pub(all) struct Pickle {
   id : String
@@ -286,16 +272,14 @@ pub(all) struct Pickle {
   tags : Array[PickleTag]
   astNodeIds : Array[String]
   location : Location?
-}
-pub impl ToJson for Pickle
-pub impl @json.FromJson for Pickle
+} derive(ToJson, @json.FromJson)
+pub fn Pickle::to_json(Self) -> Json
 
 pub(all) struct PickleDocString {
   content : String
   mediaType : String?
-}
-pub impl ToJson for PickleDocString
-pub impl @json.FromJson for PickleDocString
+} derive(ToJson, @json.FromJson)
+pub fn PickleDocString::to_json(Self) -> Json
 
 pub(all) struct PickleStep {
   id : String
@@ -304,15 +288,15 @@ pub(all) struct PickleStep {
   type_ : PickleStepType?
   argument : PickleStepArgument?
 }
+pub fn PickleStep::to_json(Self) -> Json
 pub impl ToJson for PickleStep
 pub impl @json.FromJson for PickleStep
 
 pub(all) struct PickleStepArgument {
   docString : PickleDocString?
   dataTable : PickleTable?
-}
-pub impl ToJson for PickleStepArgument
-pub impl @json.FromJson for PickleStepArgument
+} derive(ToJson, @json.FromJson)
+pub fn PickleStepArgument::to_json(Self) -> Json
 
 pub(all) enum PickleStepType {
   Unknown
@@ -320,40 +304,36 @@ pub(all) enum PickleStepType {
   Action
   Outcome
 }
+pub fn PickleStepType::to_json(Self) -> Json
 pub impl ToJson for PickleStepType
 pub impl @json.FromJson for PickleStepType
 
 pub(all) struct PickleTable {
   rows : Array[PickleTableRow]
-}
-pub impl ToJson for PickleTable
-pub impl @json.FromJson for PickleTable
+} derive(ToJson, @json.FromJson)
+pub fn PickleTable::to_json(Self) -> Json
 
 pub(all) struct PickleTableCell {
   value : String
-}
-pub impl ToJson for PickleTableCell
-pub impl @json.FromJson for PickleTableCell
+} derive(ToJson, @json.FromJson)
+pub fn PickleTableCell::to_json(Self) -> Json
 
 pub(all) struct PickleTableRow {
   cells : Array[PickleTableCell]
-}
-pub impl ToJson for PickleTableRow
-pub impl @json.FromJson for PickleTableRow
+} derive(ToJson, @json.FromJson)
+pub fn PickleTableRow::to_json(Self) -> Json
 
 pub(all) struct PickleTag {
   name : String
   astNodeId : String
-}
-pub impl ToJson for PickleTag
-pub impl @json.FromJson for PickleTag
+} derive(ToJson, @json.FromJson)
+pub fn PickleTag::to_json(Self) -> Json
 
 pub struct Product {
   name : String
   version : String?
-}
-pub impl ToJson for Product
-pub impl @json.FromJson for Product
+} derive(ToJson, @json.FromJson)
+pub fn Product::to_json(Self) -> Json
 
 pub struct Rule {
   location : Location
@@ -363,16 +343,14 @@ pub struct Rule {
   description : String
   children : Array[RuleChild]
   id : String
-}
-pub impl ToJson for Rule
-pub impl @json.FromJson for Rule
+} derive(ToJson, @json.FromJson)
+pub fn Rule::to_json(Self) -> Json
 
 pub struct RuleChild {
   background : Background?
   scenario : Scenario?
-}
-pub impl ToJson for RuleChild
-pub impl @json.FromJson for RuleChild
+} derive(ToJson, @json.FromJson)
+pub fn RuleChild::to_json(Self) -> Json
 
 pub struct Scenario {
   location : Location
@@ -383,29 +361,27 @@ pub struct Scenario {
   steps : Array[Step]
   examples : Array[Examples]
   id : String
-}
-pub impl ToJson for Scenario
-pub impl @json.FromJson for Scenario
+} derive(ToJson, @json.FromJson)
+pub fn Scenario::to_json(Self) -> Json
 
 pub struct Snippet {
   language : String
   code : String
-}
-pub impl ToJson for Snippet
-pub impl @json.FromJson for Snippet
+} derive(ToJson, @json.FromJson)
+pub fn Snippet::to_json(Self) -> Json
 
 pub struct Source {
   uri : String
   data : String
   mediaType : SourceMediaType
-}
-pub impl ToJson for Source
-pub impl @json.FromJson for Source
+} derive(ToJson, @json.FromJson)
+pub fn Source::to_json(Self) -> Json
 
 pub enum SourceMediaType {
   GherkinPlain
   GherkinMarkdown
 }
+pub fn SourceMediaType::to_json(Self) -> Json
 pub impl ToJson for SourceMediaType
 pub impl @json.FromJson for SourceMediaType
 
@@ -414,9 +390,8 @@ pub struct SourceReference {
   javaMethod : JavaMethod?
   javaStackTraceElement : JavaStackTraceElement?
   location : Location?
-}
-pub impl ToJson for SourceReference
-pub impl @json.FromJson for SourceReference
+} derive(ToJson, @json.FromJson)
+pub fn SourceReference::to_json(Self) -> Json
 
 pub struct Step {
   location : Location
@@ -426,22 +401,21 @@ pub struct Step {
   keywordType : KeywordType?
   docString : DocString?
   dataTable : DataTable?
-}
-pub impl ToJson for Step
-pub impl @json.FromJson for Step
+} derive(ToJson, @json.FromJson)
+pub fn Step::to_json(Self) -> Json
 
 pub struct StepDefinition {
   id : String
   pattern : StepDefinitionPattern
   sourceReference : SourceReference
-}
-pub impl ToJson for StepDefinition
-pub impl @json.FromJson for StepDefinition
+} derive(ToJson, @json.FromJson)
+pub fn StepDefinition::to_json(Self) -> Json
 
 pub struct StepDefinitionPattern {
   source : String
   type_ : StepDefinitionPatternType
 }
+pub fn StepDefinitionPattern::to_json(Self) -> Json
 pub impl ToJson for StepDefinitionPattern
 pub impl @json.FromJson for StepDefinitionPattern
 
@@ -449,69 +423,62 @@ pub enum StepDefinitionPatternType {
   CucumberExpression
   RegularExpression
 }
+pub fn StepDefinitionPatternType::to_json(Self) -> Json
 pub impl ToJson for StepDefinitionPatternType
 pub impl @json.FromJson for StepDefinitionPatternType
 
 pub struct StepMatchArgument {
   group : Group
   parameterTypeName : String?
-}
-pub impl ToJson for StepMatchArgument
-pub impl @json.FromJson for StepMatchArgument
+} derive(ToJson, @json.FromJson)
+pub fn StepMatchArgument::to_json(Self) -> Json
 
 pub struct StepMatchArgumentsList {
   stepMatchArguments : Array[StepMatchArgument]
-}
-pub impl ToJson for StepMatchArgumentsList
-pub impl @json.FromJson for StepMatchArgumentsList
+} derive(ToJson, @json.FromJson)
+pub fn StepMatchArgumentsList::to_json(Self) -> Json
 
 pub struct Suggestion {
   id : String
   pickleStepId : String
   snippets : Array[Snippet]
-}
-pub impl ToJson for Suggestion
-pub impl @json.FromJson for Suggestion
+} derive(ToJson, @json.FromJson)
+pub fn Suggestion::to_json(Self) -> Json
 
 pub struct TableCell {
   location : Location
   value : String
-}
-pub impl ToJson for TableCell
-pub impl @json.FromJson for TableCell
+} derive(ToJson, @json.FromJson)
+pub fn TableCell::to_json(Self) -> Json
 
 pub struct TableRow {
   location : Location
   cells : Array[TableCell]
   id : String
-}
-pub impl ToJson for TableRow
-pub impl @json.FromJson for TableRow
+} derive(ToJson, @json.FromJson)
+pub fn TableRow::to_json(Self) -> Json
 
 pub struct Tag {
   location : Location
   name : String
   id : String
-}
-pub impl ToJson for Tag
-pub impl @json.FromJson for Tag
+} derive(ToJson, @json.FromJson)
+pub fn Tag::to_json(Self) -> Json
 
 pub struct TestCase {
   id : String
   pickleId : String
   testSteps : Array[TestStep]
   testRunStartedId : String?
-}
-pub impl ToJson for TestCase
-pub impl @json.FromJson for TestCase
+} derive(ToJson, @json.FromJson)
+pub fn TestCase::to_json(Self) -> Json
 
 pub struct TestCaseFinished {
   testCaseStartedId : String
   timestamp : Timestamp
   willBeRetried : Bool
-}
-pub impl ToJson for TestCaseFinished
-pub impl @json.FromJson for TestCaseFinished
+} derive(ToJson, @json.FromJson)
+pub fn TestCaseFinished::to_json(Self) -> Json
 
 pub struct TestCaseStarted {
   attempt : Int
@@ -519,9 +486,8 @@ pub struct TestCaseStarted {
   testCaseId : String
   workerId : String?
   timestamp : Timestamp
-}
-pub impl ToJson for TestCaseStarted
-pub impl @json.FromJson for TestCaseStarted
+} derive(ToJson, @json.FromJson)
+pub fn TestCaseStarted::to_json(Self) -> Json
 
 pub struct TestRunFinished {
   message : String?
@@ -529,17 +495,15 @@ pub struct TestRunFinished {
   timestamp : Timestamp
   exception : Exception?
   testRunStartedId : String?
-}
-pub impl ToJson for TestRunFinished
-pub impl @json.FromJson for TestRunFinished
+} derive(ToJson, @json.FromJson)
+pub fn TestRunFinished::to_json(Self) -> Json
 
 pub struct TestRunHookFinished {
   testRunHookStartedId : String
   result : TestStepResult
   timestamp : Timestamp
-}
-pub impl ToJson for TestRunHookFinished
-pub impl @json.FromJson for TestRunHookFinished
+} derive(ToJson, @json.FromJson)
+pub fn TestRunHookFinished::to_json(Self) -> Json
 
 pub struct TestRunHookStarted {
   id : String
@@ -547,16 +511,14 @@ pub struct TestRunHookStarted {
   hookId : String
   timestamp : Timestamp
   workerId : String?
-}
-pub impl ToJson for TestRunHookStarted
-pub impl @json.FromJson for TestRunHookStarted
+} derive(ToJson, @json.FromJson)
+pub fn TestRunHookStarted::to_json(Self) -> Json
 
 pub struct TestRunStarted {
   timestamp : Timestamp
   id : String?
-}
-pub impl ToJson for TestRunStarted
-pub impl @json.FromJson for TestRunStarted
+} derive(ToJson, @json.FromJson)
+pub fn TestRunStarted::to_json(Self) -> Json
 
 pub struct TestStep {
   id : String
@@ -564,27 +526,24 @@ pub struct TestStep {
   pickleStepId : String?
   stepDefinitionIds : Array[String]?
   stepMatchArgumentsLists : Array[StepMatchArgumentsList]?
-}
-pub impl ToJson for TestStep
-pub impl @json.FromJson for TestStep
+} derive(ToJson, @json.FromJson)
+pub fn TestStep::to_json(Self) -> Json
 
 pub struct TestStepFinished {
   testCaseStartedId : String
   testStepId : String
   testStepResult : TestStepResult
   timestamp : Timestamp
-}
-pub impl ToJson for TestStepFinished
-pub impl @json.FromJson for TestStepFinished
+} derive(ToJson, @json.FromJson)
+pub fn TestStepFinished::to_json(Self) -> Json
 
 pub struct TestStepResult {
   duration : Duration
   status : TestStepResultStatus
   message : String?
   exception : Exception?
-}
-pub impl ToJson for TestStepResult
-pub impl @json.FromJson for TestStepResult
+} derive(ToJson, @json.FromJson)
+pub fn TestStepResult::to_json(Self) -> Json
 
 pub enum TestStepResultStatus {
   Unknown
@@ -595,6 +554,7 @@ pub enum TestStepResultStatus {
   Ambiguous
   Failed
 }
+pub fn TestStepResultStatus::to_json(Self) -> Json
 pub impl ToJson for TestStepResultStatus
 pub impl @json.FromJson for TestStepResultStatus
 
@@ -602,25 +562,21 @@ pub struct TestStepStarted {
   testCaseStartedId : String
   testStepId : String
   timestamp : Timestamp
-}
-pub impl ToJson for TestStepStarted
-pub impl @json.FromJson for TestStepStarted
+} derive(ToJson, @json.FromJson)
+pub fn TestStepStarted::to_json(Self) -> Json
 
 pub struct Timestamp {
   seconds : Int
   nanos : Int
-}
-pub impl ToJson for Timestamp
-pub impl @json.FromJson for Timestamp
+} derive(ToJson, @json.FromJson)
+pub fn Timestamp::to_json(Self) -> Json
 
 pub struct UndefinedParameterType {
   expression : String
   name : String
-}
-pub impl ToJson for UndefinedParameterType
-pub impl @json.FromJson for UndefinedParameterType
+} derive(ToJson, @json.FromJson)
+pub fn UndefinedParameterType::to_json(Self) -> Json
 
 // Type aliases
 
 // Traits
-
