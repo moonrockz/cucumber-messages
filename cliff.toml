@@ -42,6 +42,7 @@ commit_parsers = [
     { message = "^chore", skip = true },
     { message = "^ci", skip = true },
     { message = "^build", skip = true },
+    { message = "^Merge (pull request|branch)", skip = true },
     # Non-conventional commits (legacy) — catch-all
     { message = "^[A|a]dd", group = "Added" },
     { message = "^[I|i]ntroduce", group = "Added" },
