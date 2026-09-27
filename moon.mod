@@ -3,7 +3,7 @@ name = "moonrockz/cucumber-messages"
 version = "0.2.0"
 
 import {
-  "moonbitlang/x@0.4.40",
+  "moonbitlang/x@0.5.5",
 }
 
 readme = "README.mbt.md"
