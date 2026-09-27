@@ -38,7 +38,7 @@ Always use `mise run <task>` -- never raw `moon` commands:
 
 - CHANGELOG.md is auto-generated from conventional commits via `git cliff` -- never edit manually
 - `mise run release:version` -- compute next version
-- `mise run release:bump` -- update moon.mod.json version
+- `mise run release:bump` -- update moon.mod version
 - `mise run release:changelog` -- regenerate CHANGELOG.md
 
 ## Release Conventions
