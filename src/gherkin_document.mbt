@@ -214,13 +214,13 @@ test "gherkin document with feature roundtrip" {
   assert_eq(doc.uri, Some("test.feature"))
   assert_eq(doc.comments.length(), 1)
   assert_eq(doc.comments[0].text, "# a comment")
-  guard doc.feature is Some(f)
+  guard! doc.feature is Some(f)
   assert_eq(f.name, "Test")
   assert_eq(f.language, "en")
   let back : GherkinDocument = @json.from_json(doc.to_json()) catch {
     _ => panic()
   }
-  guard back.feature is Some(f2)
+  guard! back.feature is Some(f2)
   assert_eq(f2.name, "Test")
 }
 
@@ -229,15 +229,15 @@ test "gherkin document with scenario roundtrip" {
   let raw = "{\"comments\":[],\"feature\":{\"location\":{\"line\":1},\"tags\":[],\"language\":\"en\",\"keyword\":\"Feature\",\"name\":\"F\",\"description\":\"\",\"children\":[{\"scenario\":{\"location\":{\"line\":3},\"tags\":[{\"location\":{\"line\":2},\"name\":\"@smoke\",\"id\":\"t1\"}],\"keyword\":\"Scenario\",\"name\":\"S\",\"description\":\"\",\"steps\":[{\"location\":{\"line\":4},\"keyword\":\"Given \",\"text\":\"a step\",\"id\":\"s1\",\"keywordType\":\"Context\"}],\"examples\":[],\"id\":\"sc1\"}}]}}"
   let json = @json.parse(raw) catch { _ => panic() }
   let doc : GherkinDocument = @json.from_json(json) catch { _ => panic() }
-  guard doc.feature is Some(f)
+  guard! doc.feature is Some(f)
   assert_eq(f.children.length(), 1)
-  guard f.children[0].scenario is Some(sc)
+  guard! f.children[0].scenario is Some(sc)
   assert_eq(sc.name, "S")
   assert_eq(sc.tags.length(), 1)
   assert_eq(sc.tags[0].name, "@smoke")
   assert_eq(sc.steps.length(), 1)
   assert_eq(sc.steps[0].text, "a step")
-  guard sc.steps[0].keywordType is Some(kt)
+  guard! sc.steps[0].keywordType is Some(kt)
   match kt {
     Context => ()
     _ => panic()
@@ -245,7 +245,7 @@ test "gherkin document with scenario roundtrip" {
   let back : GherkinDocument = @json.from_json(doc.to_json()) catch {
     _ => panic()
   }
-  guard back.feature is Some(f2)
-  guard f2.children[0].scenario is Some(sc2)
+  guard! back.feature is Some(f2)
+  guard! f2.children[0].scenario is Some(sc2)
   assert_eq(sc2.name, "S")
 }

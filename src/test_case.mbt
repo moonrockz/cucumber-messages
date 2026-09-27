@@ -56,13 +56,13 @@ test "test case with step match arguments roundtrip" {
   let raw = "{\"id\":\"tc2\",\"pickleId\":\"p2\",\"testSteps\":[{\"id\":\"ts2\",\"pickleStepId\":\"ps2\",\"stepDefinitionIds\":[\"sd2\"],\"stepMatchArgumentsLists\":[{\"stepMatchArguments\":[{\"group\":{\"start\":10,\"value\":\"42\",\"children\":[]},\"parameterTypeName\":\"int\"}]}]}]}"
   let json = @json.parse(raw) catch { _ => panic() }
   let tc : TestCase = @json.from_json(json) catch { _ => panic() }
-  guard tc.testSteps[0].stepMatchArgumentsLists is Some(lists)
+  guard! tc.testSteps[0].stepMatchArgumentsLists is Some(lists)
   assert_eq(lists.length(), 1)
   assert_eq(lists[0].stepMatchArguments.length(), 1)
   assert_eq(lists[0].stepMatchArguments[0].group.value, Some("42"))
   assert_eq(lists[0].stepMatchArguments[0].group.start, Some(10))
   assert_eq(lists[0].stepMatchArguments[0].parameterTypeName, Some("int"))
   let back : TestCase = @json.from_json(tc.to_json()) catch { _ => panic() }
-  guard back.testSteps[0].stepMatchArgumentsLists is Some(lists2)
+  guard! back.testSteps[0].stepMatchArgumentsLists is Some(lists2)
   assert_eq(lists2[0].stepMatchArguments[0].group.value, Some("42"))
 }

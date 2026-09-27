@@ -18,7 +18,7 @@ pub fn parse_ndjson(input : String) -> Array[Envelope] raise {
   let envelopes : Array[Envelope] = []
   let lines = input.split("\n")
   for line in lines {
-    let trimmed = line.trim().to_string()
+    let trimmed = line.trim().to_owned()
     if trimmed.length() > 0 {
       envelopes.push(parse_ndjson_line(trimmed))
     }
@@ -29,7 +29,7 @@ pub fn parse_ndjson(input : String) -> Array[Envelope] raise {
 ///|
 /// Serialize an array of Envelopes to NDJSON (one JSON object per line).
 pub fn envelopes_to_ndjson(envelopes : Array[Envelope]) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   for i, env in envelopes {
     if i > 0 {
       buf.write_char('\n')
@@ -160,7 +160,7 @@ test "fixture all_variants ndjson roundtrip" {
   }
   match back[2] {
     GherkinDocument(doc) => {
-      guard doc.feature is Some(f)
+      guard! doc.feature is Some(f)
       assert_eq(f.name, "Hello")
     }
     _ => panic()

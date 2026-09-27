@@ -324,7 +324,7 @@ test "envelope gherkin document roundtrip" {
   let env : Envelope = @json.from_json(json) catch { _ => panic() }
   match env {
     GherkinDocument(doc) => {
-      guard doc.feature is Some(f)
+      guard! doc.feature is Some(f)
       assert_eq(f.name, "X")
     }
     _ => panic()
