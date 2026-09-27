@@ -6,7 +6,10 @@ pub enum AttachmentContentEncoding {
 }
 
 ///|
-pub impl @json.FromJson for AttachmentContentEncoding with from_json(json, path) {
+pub impl @json.FromJson for AttachmentContentEncoding with fn from_json(
+  json,
+  path,
+) {
   guard json is String(s) else {
     raise @json.JsonDecodeError(
       (path, "AttachmentContentEncoding::from_json: expected string"),
@@ -25,7 +28,7 @@ pub impl @json.FromJson for AttachmentContentEncoding with from_json(json, path)
 }
 
 ///|
-pub impl ToJson for AttachmentContentEncoding with to_json(self) {
+pub impl ToJson for AttachmentContentEncoding with fn to_json(self) {
   match self {
     Identity => "IDENTITY".to_json()
     Base64 => "BASE64".to_json()

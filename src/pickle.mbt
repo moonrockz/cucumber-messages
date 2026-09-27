@@ -40,7 +40,7 @@ pub(all) enum PickleStepType {
 }
 
 ///|
-pub impl @json.FromJson for PickleStepType with from_json(json, path) {
+pub impl @json.FromJson for PickleStepType with fn from_json(json, path) {
   guard json is String(s) else {
     raise @json.JsonDecodeError(
       (path, "PickleStepType::from_json: expected string"),
@@ -59,7 +59,7 @@ pub impl @json.FromJson for PickleStepType with from_json(json, path) {
 }
 
 ///|
-pub impl ToJson for PickleStepType with to_json(self) {
+pub impl ToJson for PickleStepType with fn to_json(self) {
   match self {
     Unknown => "Unknown".to_json()
     Context => "Context".to_json()
@@ -80,7 +80,7 @@ pub(all) struct PickleStep {
 }
 
 ///|
-pub impl @json.FromJson for PickleStep with from_json(json, path) {
+pub impl @json.FromJson for PickleStep with fn from_json(json, path) {
   guard json is Object(obj) else {
     raise @json.JsonDecodeError(
       (path, "PickleStep::from_json: expected object"),
@@ -111,11 +111,11 @@ pub impl @json.FromJson for PickleStep with from_json(json, path) {
     Some(Null) | None => None
     Some(v) => Some(@json.from_json(v, path=path.add_key("argument")))
   }
-  PickleStep::{ id, text, astNodeIds, type_, argument }
+  PickleStep::{ id, text, astNodeIds, type_, argument, }
 }
 
 ///|
-pub impl ToJson for PickleStep with to_json(self) {
+pub impl ToJson for PickleStep with fn to_json(self) {
   let o : Map[String, Json] = {
     "id": self.id.to_json(),
     "text": self.text.to_json(),

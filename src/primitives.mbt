@@ -27,7 +27,7 @@ pub enum SourceMediaType {
 }
 
 ///|
-pub impl @json.FromJson for SourceMediaType with from_json(json, path) {
+pub impl @json.FromJson for SourceMediaType with fn from_json(json, path) {
   guard json is String(s) else {
     raise @json.JsonDecodeError(
       (path, "SourceMediaType::from_json: expected string"),
@@ -46,7 +46,7 @@ pub impl @json.FromJson for SourceMediaType with from_json(json, path) {
 }
 
 ///|
-pub impl ToJson for SourceMediaType with to_json(self) {
+pub impl ToJson for SourceMediaType with fn to_json(self) {
   match self {
     GherkinPlain => "text/x.cucumber.gherkin+plain".to_json()
     GherkinMarkdown => "text/x.cucumber.gherkin+markdown".to_json()
@@ -71,7 +71,7 @@ test "location decode line and column" {
 
 ///|
 test "location roundtrip" {
-  let loc = Location::{ line: 5, column: Some(10) }
+  let loc = Location::{ line: 5, column: Some(10), }
   let json = loc.to_json()
   let back : Location = @json.from_json(json) catch { _ => panic() }
   assert_eq(back.line, loc.line)
@@ -80,7 +80,7 @@ test "location roundtrip" {
 
 ///|
 test "timestamp roundtrip" {
-  let ts = Timestamp::{ seconds: 1234567890, nanos: 123456789 }
+  let ts = Timestamp::{ seconds: 1234567890, nanos: 123456789, }
   let json = ts.to_json()
   let back : Timestamp = @json.from_json(json) catch { _ => panic() }
   assert_eq(back.seconds, ts.seconds)
@@ -89,7 +89,7 @@ test "timestamp roundtrip" {
 
 ///|
 test "duration roundtrip" {
-  let d = Duration::{ seconds: 5, nanos: 500_000_000 }
+  let d = Duration::{ seconds: 5, nanos: 500_000_000, }
   let json = d.to_json()
   let back : Duration = @json.from_json(json) catch { _ => panic() }
   assert_eq(back.seconds, d.seconds)

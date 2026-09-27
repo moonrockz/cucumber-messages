@@ -10,7 +10,7 @@ pub enum HookType {
 }
 
 ///|
-pub impl @json.FromJson for HookType with from_json(json, path) {
+pub impl @json.FromJson for HookType with fn from_json(json, path) {
   guard json is String(s) else {
     raise @json.JsonDecodeError((path, "HookType::from_json: expected string"))
   }
@@ -29,7 +29,7 @@ pub impl @json.FromJson for HookType with from_json(json, path) {
 }
 
 ///|
-pub impl ToJson for HookType with to_json(self) {
+pub impl ToJson for HookType with fn to_json(self) {
   match self {
     BeforeTestRun => "BEFORE_TEST_RUN".to_json()
     AfterTestRun => "AFTER_TEST_RUN".to_json()
@@ -52,7 +52,7 @@ pub struct Hook {
 }
 
 ///|
-pub impl @json.FromJson for Hook with from_json(json, path) {
+pub impl @json.FromJson for Hook with fn from_json(json, path) {
   guard json is Object(obj) else {
     raise @json.JsonDecodeError((path, "Hook::from_json: expected object"))
   }
@@ -79,11 +79,11 @@ pub impl @json.FromJson for Hook with from_json(json, path) {
     Some(Null) | None => None
     Some(v) => Some(@json.from_json(v, path=path.add_key("type")))
   }
-  Hook::{ id, sourceReference, name, tagExpression, type_ }
+  Hook::{ id, sourceReference, name, tagExpression, type_, }
 }
 
 ///|
-pub impl ToJson for Hook with to_json(self) {
+pub impl ToJson for Hook with fn to_json(self) {
   let o : Map[String, Json] = {
     "id": self.id.to_json(),
     "sourceReference": self.sourceReference.to_json(),

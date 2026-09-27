@@ -6,7 +6,10 @@ pub enum StepDefinitionPatternType {
 }
 
 ///|
-pub impl @json.FromJson for StepDefinitionPatternType with from_json(json, path) {
+pub impl @json.FromJson for StepDefinitionPatternType with fn from_json(
+  json,
+  path,
+) {
   guard json is String(s) else {
     raise @json.JsonDecodeError(
       (path, "StepDefinitionPatternType::from_json: expected string"),
@@ -25,7 +28,7 @@ pub impl @json.FromJson for StepDefinitionPatternType with from_json(json, path)
 }
 
 ///|
-pub impl ToJson for StepDefinitionPatternType with to_json(self) {
+pub impl ToJson for StepDefinitionPatternType with fn to_json(self) {
   match self {
     CucumberExpression => "CUCUMBER_EXPRESSION".to_json()
     RegularExpression => "REGULAR_EXPRESSION".to_json()
@@ -41,7 +44,7 @@ pub struct StepDefinitionPattern {
 }
 
 ///|
-pub impl @json.FromJson for StepDefinitionPattern with from_json(json, path) {
+pub impl @json.FromJson for StepDefinitionPattern with fn from_json(json, path) {
   guard json is Object(obj) else {
     raise @json.JsonDecodeError(
       (path, "StepDefinitionPattern::from_json: expected object"),
@@ -61,11 +64,11 @@ pub impl @json.FromJson for StepDefinitionPattern with from_json(json, path) {
         (path, "StepDefinitionPattern::from_json: missing type"),
       )
   }
-  StepDefinitionPattern::{ source, type_ }
+  StepDefinitionPattern::{ source, type_, }
 }
 
 ///|
-pub impl ToJson for StepDefinitionPattern with to_json(self) {
+pub impl ToJson for StepDefinitionPattern with fn to_json(self) {
   let o : Map[String, Json] = {
     "source": self.source.to_json(),
     "type": self.type_.to_json(),

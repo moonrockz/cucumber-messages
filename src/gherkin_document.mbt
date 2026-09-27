@@ -55,7 +55,7 @@ pub enum KeywordType {
 }
 
 ///|
-pub impl @json.FromJson for KeywordType with from_json(json, path) {
+pub impl @json.FromJson for KeywordType with fn from_json(json, path) {
   guard json is String(s) else {
     raise @json.JsonDecodeError(
       (path, "KeywordType::from_json: expected string"),
@@ -75,7 +75,7 @@ pub impl @json.FromJson for KeywordType with from_json(json, path) {
 }
 
 ///|
-pub impl ToJson for KeywordType with to_json(self) {
+pub impl ToJson for KeywordType with fn to_json(self) {
   match self {
     Unknown => "Unknown".to_json()
     Context => "Context".to_json()

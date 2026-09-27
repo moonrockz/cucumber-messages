@@ -11,7 +11,7 @@ pub enum TestStepResultStatus {
 }
 
 ///|
-pub impl @json.FromJson for TestStepResultStatus with from_json(json, path) {
+pub impl @json.FromJson for TestStepResultStatus with fn from_json(json, path) {
   guard json is String(s) else {
     raise @json.JsonDecodeError(
       (path, "TestStepResultStatus::from_json: expected string"),
@@ -35,7 +35,7 @@ pub impl @json.FromJson for TestStepResultStatus with from_json(json, path) {
 }
 
 ///|
-pub impl ToJson for TestStepResultStatus with to_json(self) {
+pub impl ToJson for TestStepResultStatus with fn to_json(self) {
   match self {
     Unknown => "UNKNOWN".to_json()
     Passed => "PASSED".to_json()
