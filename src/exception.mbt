@@ -7,7 +7,7 @@ pub struct Exception {
 }
 
 ///|
-pub impl @json.FromJson for Exception with from_json(json, path) {
+pub impl @json.FromJson for Exception with fn from_json(json, path) {
   guard json is Object(obj) else {
     raise @json.JsonDecodeError((path, "Exception::from_json: expected object"))
   }
@@ -24,11 +24,11 @@ pub impl @json.FromJson for Exception with from_json(json, path) {
     Some(Null) | None => None
     Some(v) => Some(@json.from_json(v, path=path.add_key("stackTrace")))
   }
-  Exception::{ type_, message, stackTrace }
+  Exception::{ type_, message, stackTrace, }
 }
 
 ///|
-pub impl ToJson for Exception with to_json(self) {
+pub impl ToJson for Exception with fn to_json(self) {
   let o : Map[String, Json] = { "type": self.type_.to_json() }
   match self.message {
     Some(m) => o.set("message", m.to_json())

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Type-check MoonBit sources"
+set -euo pipefail
+
+moon check

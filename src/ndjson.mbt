@@ -18,7 +18,7 @@ pub fn parse_ndjson(input : String) -> Array[Envelope] raise {
   let envelopes : Array[Envelope] = []
   let lines = input.split("\n")
   for line in lines {
-    let trimmed = line.trim().to_string()
+    let trimmed = line.trim().to_owned()
     if trimmed.length() > 0 {
       envelopes.push(parse_ndjson_line(trimmed))
     }
@@ -29,7 +29,7 @@ pub fn parse_ndjson(input : String) -> Array[Envelope] raise {
 ///|
 /// Serialize an array of Envelopes to NDJSON (one JSON object per line).
 pub fn envelopes_to_ndjson(envelopes : Array[Envelope]) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   for i, env in envelopes {
     if i > 0 {
       buf.write_char('\n')
@@ -43,10 +43,10 @@ pub fn envelopes_to_ndjson(envelopes : Array[Envelope]) -> String {
 test "ndjson single line roundtrip" {
   let env = Envelope::Meta(Meta::{
     protocolVersion: "27.0.0",
-    implementation: Product::{ name: "test", version: None },
-    runtime: Product::{ name: "moonbit", version: None },
-    os: Product::{ name: "linux", version: None },
-    cpu: Product::{ name: "amd64", version: None },
+    implementation: Product::{ name: "test", version: None, },
+    runtime: Product::{ name: "moonbit", version: None, },
+    os: Product::{ name: "linux", version: None, },
+    cpu: Product::{ name: "amd64", version: None, },
     ci: None,
   })
   let line = env.to_ndjson_line()
@@ -78,13 +78,13 @@ test "ndjson multi-line parse" {
 test "ndjson roundtrip multi envelope" {
   let envs = [
     Envelope::TestRunStarted(TestRunStarted::{
-      timestamp: Timestamp::{ seconds: 1, nanos: 0 },
+      timestamp: Timestamp::{ seconds: 1, nanos: 0, },
       id: None,
     }),
     Envelope::TestRunFinished(TestRunFinished::{
       message: None,
       success: true,
-      timestamp: Timestamp::{ seconds: 2, nanos: 0 },
+      timestamp: Timestamp::{ seconds: 2, nanos: 0, },
       exception: None,
       testRunStartedId: None,
     }),
@@ -160,7 +160,7 @@ test "fixture all_variants ndjson roundtrip" {
   }
   match back[2] {
     GherkinDocument(doc) => {
-      guard doc.feature is Some(f)
+      guard! doc.feature is Some(f)
       assert_eq(f.name, "Hello")
     }
     _ => panic()

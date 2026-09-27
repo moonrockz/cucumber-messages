@@ -25,7 +25,7 @@ pub enum Envelope {
 }
 
 ///|
-pub impl @json.FromJson for Envelope with from_json(json, path) {
+pub impl @json.FromJson for Envelope with fn from_json(json, path) {
   guard json is Object(obj) else {
     raise @json.JsonDecodeError((path, "Envelope::from_json: expected object"))
   }
@@ -122,7 +122,7 @@ pub impl @json.FromJson for Envelope with from_json(json, path) {
 }
 
 ///|
-pub impl ToJson for Envelope with to_json(self) {
+pub impl ToJson for Envelope with fn to_json(self) {
   let o : Map[String, Json] = match self {
     Meta(m) => { "meta": m.to_json() }
     Source(s) => { "source": s.to_json() }
@@ -324,7 +324,7 @@ test "envelope gherkin document roundtrip" {
   let env : Envelope = @json.from_json(json) catch { _ => panic() }
   match env {
     GherkinDocument(doc) => {
-      guard doc.feature is Some(f)
+      guard! doc.feature is Some(f)
       assert_eq(f.name, "X")
     }
     _ => panic()

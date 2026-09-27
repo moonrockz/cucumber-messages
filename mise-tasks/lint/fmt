@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#MISE description="Check that MoonBit sources are formatted"
+set -euo pipefail
+
+if ! moon fmt --check; then
+  echo "::error::moon fmt found unformatted files -- run 'moon fmt' locally and commit" >&2
+  exit 1
+fi

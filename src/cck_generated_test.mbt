@@ -76,10 +76,10 @@ test "cck/all-statuses: parse 72 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"85","testStepId":"78","testStepResult":{"status":"SKIPPED","duration":{"seconds":0,"nanos":0}},"timestamp":{"seconds":0,"nanos":47000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"85","timestamp":{"seconds":0,"nanos":48000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"54","timestamp":{"seconds":0,"nanos":49000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 72)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 72)
 }
 
@@ -99,10 +99,10 @@ test "cck/ambiguous: parse 13 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"9","testStepId":"8","testStepResult":{"status":"AMBIGUOUS","duration":{"seconds":0,"nanos":0}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"9","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"6","timestamp":{"seconds":0,"nanos":5000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 13)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 13)
 }
 
@@ -178,10 +178,10 @@ test "cck/attachments: parse 69 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"64","testStepId":"56","testStepResult":{"message":"whoops","exception":{"type":"Error","message":"whoops","stackTrace":"Error: whoops\nsamples/attachments/attachments.feature:39"},"status":"FAILED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":39000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"64","timestamp":{"seconds":0,"nanos":40000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"40","timestamp":{"seconds":0,"nanos":41000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 69)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 69)
 }
 
@@ -224,10 +224,10 @@ test "cck/backgrounds: parse 36 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"39","testStepId":"37","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":23000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"39","timestamp":{"seconds":0,"nanos":24000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"25","timestamp":{"seconds":0,"nanos":25000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 36)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 36)
 }
 
@@ -246,10 +246,10 @@ test "cck/cdata: parse 12 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"8","testStepId":"7","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"8","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"5","timestamp":{"seconds":0,"nanos":5000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 12)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 12)
 }
 
@@ -271,10 +271,10 @@ test "cck/data-tables: parse 15 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"16","testStepId":"15","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":5000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"16","timestamp":{"seconds":0,"nanos":6000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"12","timestamp":{"seconds":0,"nanos":7000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 15)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 15)
 }
 
@@ -305,10 +305,10 @@ test "cck/doc-strings: parse 24 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"22","testStepId":"19","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":11000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"22","timestamp":{"seconds":0,"nanos":12000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"13","timestamp":{"seconds":0,"nanos":13000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 24)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 24)
 }
 
@@ -324,10 +324,10 @@ test "cck/empty: parse 9 envelopes" {
     #|{"testCaseStarted":{"id":"4","testCaseId":"3","timestamp":{"seconds":0,"nanos":1000000},"attempt":0}}
     #|{"testCaseFinished":{"testCaseStartedId":"4","timestamp":{"seconds":0,"nanos":2000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"2","timestamp":{"seconds":0,"nanos":3000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 9)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 9)
 }
 
@@ -355,10 +355,10 @@ test "cck/examples-tables-attachment: parse 21 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"18","testStepId":"16","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":9000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"18","timestamp":{"seconds":0,"nanos":10000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"12","timestamp":{"seconds":0,"nanos":11000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 21)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 21)
 }
 
@@ -406,10 +406,10 @@ test "cck/examples-tables-undefined: parse 41 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"42","testStepId":"37","testStepResult":{"status":"UNDEFINED","duration":{"seconds":0,"nanos":0}},"timestamp":{"seconds":0,"nanos":23000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"42","timestamp":{"seconds":0,"nanos":24000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"25","timestamp":{"seconds":0,"nanos":25000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 41)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 41)
 }
 
@@ -496,10 +496,10 @@ test "cck/examples-tables: parse 80 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"91","testStepId":"84","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":55000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"91","timestamp":{"seconds":0,"nanos":56000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"56","timestamp":{"seconds":0,"nanos":57000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 80)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 80)
 }
 
@@ -613,10 +613,10 @@ test "cck/failedish-combinations: parse 107 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"132","testStepId":"117","testStepResult":{"status":"SKIPPED","duration":{"seconds":0,"nanos":0}},"timestamp":{"seconds":0,"nanos":71000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"132","timestamp":{"seconds":0,"nanos":72000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"81","timestamp":{"seconds":0,"nanos":73000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 107)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 107)
 }
 
@@ -650,10 +650,10 @@ test "cck/global-hooks-afterall-error: parse 27 envelopes" {
     #|{"testRunHookStarted":{"testRunStartedId":"10","id":"18","hookId":"7","timestamp":{"seconds":0,"nanos":13000000}}}
     #|{"testRunHookFinished":{"testRunHookStartedId":"18","timestamp":{"seconds":0,"nanos":14000000},"result":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}}}}
     #|{"testRunFinished":{"testRunStartedId":"10","timestamp":{"seconds":0,"nanos":15000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 27)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 27)
 }
 
@@ -680,10 +680,10 @@ test "cck/global-hooks-attachments: parse 20 envelopes" {
     #|{"attachment":{"testRunHookStartedId":"12","body":"Attachment from AfterAll hook","contentEncoding":"IDENTITY","mediaType":"text/plain","timestamp":{"seconds":0,"nanos":9000000}}}
     #|{"testRunHookFinished":{"testRunHookStartedId":"12","timestamp":{"seconds":0,"nanos":10000000},"result":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}}}}
     #|{"testRunFinished":{"testRunStartedId":"7","timestamp":{"seconds":0,"nanos":11000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 20)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 20)
 }
 
@@ -712,10 +712,10 @@ test "cck/global-hooks-beforeall-error: parse 22 envelopes" {
     #|{"testRunHookStarted":{"testRunStartedId":"10","id":"15","hookId":"8","timestamp":{"seconds":0,"nanos":9000000}}}
     #|{"testRunHookFinished":{"testRunHookStartedId":"15","timestamp":{"seconds":0,"nanos":10000000},"result":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}}}}
     #|{"testRunFinished":{"testRunStartedId":"10","timestamp":{"seconds":0,"nanos":11000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 22)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 22)
 }
 
@@ -753,10 +753,10 @@ test "cck/global-hooks: parse 31 envelopes" {
     #|{"testRunHookStarted":{"testRunStartedId":"14","id":"24","hookId":"12","timestamp":{"seconds":0,"nanos":15000000}}}
     #|{"testRunHookFinished":{"testRunHookStartedId":"24","timestamp":{"seconds":0,"nanos":16000000},"result":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}}}}
     #|{"testRunFinished":{"testRunStartedId":"14","timestamp":{"seconds":0,"nanos":17000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 31)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 31)
 }
 
@@ -783,10 +783,10 @@ test "cck/hooks-attachment: parse 20 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"12","testStepId":"11","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":9000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"12","timestamp":{"seconds":0,"nanos":10000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"7","timestamp":{"seconds":0,"nanos":11000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 20)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 20)
 }
 
@@ -829,10 +829,10 @@ test "cck/hooks-conditional: parse 36 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"33","testStepId":"30","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":19000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"33","timestamp":{"seconds":0,"nanos":20000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"20","timestamp":{"seconds":0,"nanos":21000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 36)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 36)
 }
 
@@ -857,10 +857,10 @@ test "cck/hooks-named: parse 18 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"12","testStepId":"11","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":7000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"12","timestamp":{"seconds":0,"nanos":8000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"7","timestamp":{"seconds":0,"nanos":9000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 18)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 18)
 }
 
@@ -926,10 +926,10 @@ test "cck/hooks-skipped: parse 59 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"45","testStepId":"42","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":39000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"45","timestamp":{"seconds":0,"nanos":40000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"22","timestamp":{"seconds":0,"nanos":41000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 59)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 59)
 }
 
@@ -954,10 +954,10 @@ test "cck/hooks-undefined: parse 18 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"11","testStepId":"10","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":7000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"11","timestamp":{"seconds":0,"nanos":8000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"6","timestamp":{"seconds":0,"nanos":9000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 18)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 18)
 }
 
@@ -993,10 +993,10 @@ test "cck/hooks: parse 29 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"22","testStepId":"20","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":15000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"22","timestamp":{"seconds":0,"nanos":16000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"12","timestamp":{"seconds":0,"nanos":17000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 29)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 29)
 }
 
@@ -1038,10 +1038,10 @@ test "cck/markdown: parse 35 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"40","testStepId":"38","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":21000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"40","timestamp":{"seconds":0,"nanos":22000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"28","timestamp":{"seconds":0,"nanos":23000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 35)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 35)
 }
 
@@ -1060,10 +1060,10 @@ test "cck/minimal: parse 12 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"8","testStepId":"7","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"8","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"5","timestamp":{"seconds":0,"nanos":5000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 12)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 12)
 }
 
@@ -1134,10 +1134,10 @@ test "cck/multiple-features-reversed: parse 64 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"64","testStepId":"55","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":35000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"64","timestamp":{"seconds":0,"nanos":36000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"37","timestamp":{"seconds":0,"nanos":37000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 64)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 64)
 }
 
@@ -1208,10 +1208,10 @@ test "cck/multiple-features: parse 64 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"64","testStepId":"55","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":35000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"64","timestamp":{"seconds":0,"nanos":36000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"37","timestamp":{"seconds":0,"nanos":37000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 64)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 64)
 }
 
@@ -1231,10 +1231,10 @@ test "cck/parameter-types: parse 13 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"9","testStepId":"8","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"9","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"6","timestamp":{"seconds":0,"nanos":5000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 13)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 13)
 }
 
@@ -1253,10 +1253,10 @@ test "cck/pending-exception: parse 12 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"8","testStepId":"7","testStepResult":{"message":"TODO","exception":{"type":"PendingException","message":"TODO","stackTrace":"PendingException: TODO\nsamples/pending-exception/pending-exception.feature:6"},"status":"PENDING","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"8","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"5","timestamp":{"seconds":0,"nanos":5000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 12)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 12)
 }
 
@@ -1293,10 +1293,10 @@ test "cck/pending: parse 30 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"30","testStepId":"27","testStepResult":{"status":"SKIPPED","duration":{"seconds":0,"nanos":0}},"timestamp":{"seconds":0,"nanos":15000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"30","timestamp":{"seconds":0,"nanos":16000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"19","timestamp":{"seconds":0,"nanos":17000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 30)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 30)
 }
 
@@ -1319,10 +1319,10 @@ test "cck/regular-expression: parse 16 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"14","testStepId":"13","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":7000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"14","timestamp":{"seconds":0,"nanos":8000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"9","timestamp":{"seconds":0,"nanos":9000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 16)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 16)
 }
 
@@ -1342,10 +1342,10 @@ test "cck/retry-ambiguous: parse 13 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"9","testStepId":"8","testStepResult":{"status":"AMBIGUOUS","duration":{"seconds":0,"nanos":0}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"9","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"6","timestamp":{"seconds":0,"nanos":5000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 13)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 13)
 }
 
@@ -1364,10 +1364,10 @@ test "cck/retry-pending: parse 12 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"8","testStepId":"7","testStepResult":{"status":"PENDING","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"8","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"5","timestamp":{"seconds":0,"nanos":5000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 12)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 12)
 }
 
@@ -1386,10 +1386,10 @@ test "cck/retry-undefined: parse 12 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"7","testStepId":"6","testStepResult":{"status":"UNDEFINED","duration":{"seconds":0,"nanos":0}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"7","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"4","timestamp":{"seconds":0,"nanos":5000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 12)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 12)
 }
 
@@ -1449,10 +1449,10 @@ test "cck/retry: parse 53 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"37","testStepId":"28","testStepResult":{"message":"Exception in step","exception":{"type":"Error","message":"Exception in step","stackTrace":"Error: Exception in step\nsamples/retry/retry.feature:18"},"status":"FAILED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":35000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"37","timestamp":{"seconds":0,"nanos":36000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"20","timestamp":{"seconds":0,"nanos":37000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 53)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 53)
 }
 
@@ -1503,10 +1503,10 @@ test "cck/rules-backgrounds: parse 44 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"51","testStepId":"49","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":31000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"51","timestamp":{"seconds":0,"nanos":32000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"33","timestamp":{"seconds":0,"nanos":33000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 44)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 44)
 }
 
@@ -1560,10 +1560,10 @@ test "cck/rules: parse 47 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"57","testStepId":"54","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":29000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"57","timestamp":{"seconds":0,"nanos":30000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"39","timestamp":{"seconds":0,"nanos":31000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 47)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 47)
 }
 
@@ -1582,10 +1582,10 @@ test "cck/skipped-exception: parse 12 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"8","testStepId":"7","testStepResult":{"message":"skipping","exception":{"type":"SkippedException","message":"skipping","stackTrace":"SkippedException: skipping\nsamples/skipped-exception/skipped-exception.feature:7"},"status":"SKIPPED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"8","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"5","timestamp":{"seconds":0,"nanos":5000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 12)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 12)
 }
 
@@ -1607,10 +1607,10 @@ test "cck/skipped-failing-hook: parse 15 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"10","testStepId":"9","testStepResult":{"message":"whoops","exception":{"type":"Error","message":"whoops","stackTrace":"Error: whoops\nsamples/skipped-failing-hook/skipped-failing-hook.feature:6"},"status":"FAILED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":5000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"10","timestamp":{"seconds":0,"nanos":6000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"6","timestamp":{"seconds":0,"nanos":7000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 15)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 15)
 }
 
@@ -1641,10 +1641,10 @@ test "cck/skipped: parse 24 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"23","testStepId":"21","testStepResult":{"status":"SKIPPED","duration":{"seconds":0,"nanos":0}},"timestamp":{"seconds":0,"nanos":11000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"23","timestamp":{"seconds":0,"nanos":12000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"15","timestamp":{"seconds":0,"nanos":13000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 24)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 24)
 }
 
@@ -1663,10 +1663,10 @@ test "cck/stack-traces: parse 12 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"8","testStepId":"7","testStepResult":{"message":"BOOM","exception":{"type":"Error","message":"BOOM","stackTrace":"Error: BOOM\nsamples/stack-traces/stack-traces.feature:10"},"status":"FAILED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"8","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"5","timestamp":{"seconds":0,"nanos":5000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 12)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 12)
 }
 
@@ -1680,10 +1680,10 @@ test "cck/test-run-exception: parse 7 envelopes" {
     #|{"stepDefinition":{"id":"4","pattern":{"type":"CUCUMBER_EXPRESSION","source":"a step"},"sourceReference":{"uri":"samples/test-run-exception/test-run-exception.ts","location":{"line":3}}}}
     #|{"testRunStarted":{"id":"5","timestamp":{"seconds":0,"nanos":0}}}
     #|{"testRunFinished":{"testRunStartedId":"5","timestamp":{"seconds":0,"nanos":1000000},"success":false,"message":"Whoops!","exception":{"type":"Error","message":"Whoops!","stackTrace":"Error: Whoops!\n<unknown>"}}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 7)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 7)
 }
 
@@ -1729,10 +1729,10 @@ test "cck/undefined: parse 39 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"39","testStepId":"32","testStepResult":{"status":"UNDEFINED","duration":{"seconds":0,"nanos":0}},"timestamp":{"seconds":0,"nanos":19000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"39","timestamp":{"seconds":0,"nanos":20000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"22","timestamp":{"seconds":0,"nanos":21000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 39)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 39)
 }
 
@@ -1752,10 +1752,10 @@ test "cck/unknown-parameter-type: parse 13 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"8","testStepId":"7","testStepResult":{"status":"UNDEFINED","duration":{"seconds":0,"nanos":0}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"8","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"5","timestamp":{"seconds":0,"nanos":5000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 13)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 13)
 }
 
@@ -1775,9 +1775,9 @@ test "cck/unused-steps: parse 13 envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"9","testStepId":"8","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"9","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"6","timestamp":{"seconds":0,"nanos":5000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 13)
-  let ndjson = envelopes_to_ndjson(envelopes)
-  let back = parse_ndjson(ndjson)
+  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)
+  let back = @cucumber-messages.parse_ndjson(ndjson)
   assert_eq(back.length(), 13)
 }

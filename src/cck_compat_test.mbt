@@ -15,7 +15,7 @@ test "cck/minimal: parse all envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"8","testStepId":"7","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":3000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"8","timestamp":{"seconds":0,"nanos":4000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"5","timestamp":{"seconds":0,"nanos":5000000},"success":true}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 12)
   // Verify Meta
   match envelopes[0] {
@@ -25,14 +25,15 @@ test "cck/minimal: parse all envelopes" {
   // Verify Pickle step type
   match envelopes[3] {
     Pickle(p) => {
-      guard p.steps[0].type_ is Some(PickleStepType::Context)
+      guard! p.steps[0].type_
+        is Some(@cucumber-messages.PickleStepType::Context)
     }
     _ => panic()
   }
   // Verify StepDefinition pattern type
   match envelopes[4] {
     StepDefinition(sd) => {
-      guard sd.pattern.type_ is CucumberExpression
+      guard! sd.pattern.type_ is CucumberExpression
     }
     _ => panic()
   }
@@ -76,7 +77,7 @@ test "cck/hooks: parse all envelopes" {
     #|{"testStepFinished":{"testCaseStartedId":"22","testStepId":"20","testStepResult":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}},"timestamp":{"seconds":0,"nanos":15000000}}}
     #|{"testCaseFinished":{"testCaseStartedId":"22","timestamp":{"seconds":0,"nanos":16000000},"willBeRetried":false}}
     #|{"testRunFinished":{"testRunStartedId":"12","timestamp":{"seconds":0,"nanos":17000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 29)
   // Verify Hook type field
   match envelopes[5] {
@@ -145,7 +146,7 @@ test "cck/global-hooks: parse all envelopes" {
     #|{"testRunHookStarted":{"testRunStartedId":"14","id":"24","hookId":"12","timestamp":{"seconds":0,"nanos":15000000}}}
     #|{"testRunHookFinished":{"testRunHookStartedId":"24","timestamp":{"seconds":0,"nanos":16000000},"result":{"status":"PASSED","duration":{"seconds":0,"nanos":1000000}}}}
     #|{"testRunFinished":{"testRunStartedId":"14","timestamp":{"seconds":0,"nanos":17000000},"success":false}}
-  let envelopes = parse_ndjson(data)
+  let envelopes = @cucumber-messages.parse_ndjson(data)
   assert_eq(envelopes.length(), 31)
   // Verify BEFORE_TEST_RUN hooks
   match envelopes[5] {
