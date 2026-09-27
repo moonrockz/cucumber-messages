@@ -267,6 +267,8 @@ Run `mise tasks` to list all tasks. Key tasks:
 |-------------------------|---------------------------------------------------|
 | `test:unit`             | Run MoonBit unit tests                            |
 | `test:all`              | Run all tests                                     |
+| `lint:fmt`              | Check that sources are formatted                  |
+| `lint:check`            | Type-check sources                                |
 | `release:version`       | Compute next version from conventional commits    |
 | `release:changelog`     | Generate CHANGELOG.md                             |
 | `release:notes`         | Generate release notes for latest version         |

@@ -9,34 +9,35 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: hustcer/setup-moonbit@v1
+      - uses: hustcer/setup-moonbit@v1.25
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v4
         with:
           install: true
           cache: true
+
+      - name: Show toolchain versions
+        run: moon version --all
 
       - name: Install dependencies
         run: moon update
 
       - name: Check formatting
-        run: |
-          moon fmt
-          git diff --exit-code || (echo "::error::moon fmt produced changes — run 'moon fmt' locally and commit" && exit 1)
+        run: mise run lint:fmt
 
       - name: Check code
-        run: moon check
+        run: mise run lint:check
 
   unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: hustcer/setup-moonbit@v1
+      - uses: hustcer/setup-moonbit@v1.25
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v4
         with:
           install: true
           cache: true
