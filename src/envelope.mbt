@@ -22,17 +22,22 @@ pub enum Envelope {
   GherkinDocument(GherkinDocument)
   Pickle(Pickle)
   TestCase(TestCase)
+  /// A message type this library does not know, for example one added by a
+  /// newer protocol version. Holds the message key and its JSON value
+  /// unchanged, so it serializes back to the same JSON.
+  UnknownMessage(String, Json)
 }
 
 ///|
 pub impl @json.FromJson for Envelope with fn from_json(json, path) {
-  guard normalize_envelope_json(json, path) is Object(obj) else {
+  guard json is Object(obj) else {
     raise @json.JsonDecodeError((path, "Envelope::from_json: expected object"))
   }
   let mut found : (String, Envelope)? = None
   for key, value in obj {
-    guard decode_message(key, value, path.add_key(key)) is Some(envelope) else {
-      continue
+    let envelope = match decode_message(key, value, path.add_key(key)) {
+      Some(envelope) => envelope
+      None => UnknownMessage(key, value)
     }
     if found is Some((first, _)) {
       raise @json.JsonDecodeError(
@@ -46,20 +51,30 @@ pub impl @json.FromJson for Envelope with fn from_json(json, path) {
   }
   guard found is Some((_, envelope)) else {
     raise @json.JsonDecodeError(
-      (path, "Envelope::from_json: no known message key found"),
+      (path, "Envelope::from_json: no message key found"),
     )
   }
   envelope
 }
 
 ///|
+let known_message_keys : Set[String] = Set::from_array([
+  "meta", "source", "parseError", "testRunStarted", "testRunFinished", "undefinedParameterType",
+  "testCaseStarted", "testCaseFinished", "testStepStarted", "testStepFinished", "attachment",
+  "externalAttachment", "hook", "stepDefinition", "parameterType", "suggestion",
+  "testRunHookStarted", "testRunHookFinished", "gherkinDocument", "pickle", "testCase",
+])
+
+///|
 /// Decode the message stored under `key`, or `None` when `key` is not a
-/// known message type.
+/// known message type. Only known messages are normalized.
 fn decode_message(
   key : String,
   value : Json,
   path : @json.JsonPath,
 ) -> Envelope? raise @json.JsonDecodeError {
+  guard known_message_keys.contains(key) else { return None }
+  let value = normalize_envelope_json(value, path)
   let envelope = match key {
     "meta" => Meta(@json.from_json(value, path~))
     "source" => Source(@json.from_json(value, path~))
@@ -112,6 +127,7 @@ pub impl ToJson for Envelope with fn to_json(self) {
     GherkinDocument(g) => { "gherkinDocument": g.to_json() }
     Pickle(p) => { "pickle": p.to_json() }
     TestCase(t) => { "testCase": t.to_json() }
+    UnknownMessage(key, value) => Map::from_array([(key, value)])
   }
   o.to_json()
 }
@@ -398,4 +414,38 @@ test "envelope with two message keys is rejected" {
     _ => "no error"
   }
   assert_true(message.contains("more than one message"), msg=message)
+}
+
+///|
+test "envelope keeps an unknown message type" {
+  let raw =
+    #|{"futureMessage":{"id":"f1","ratio":0.5,"note":null,"items":[1,2]}}
+  let envelope = parse_ndjson_line(raw)
+  guard! envelope is UnknownMessage(key, value)
+  assert_eq(key, "futureMessage")
+  guard! @json.parse(raw) is Object(obj)
+  assert_eq(Some(value), obj.get("futureMessage"))
+  assert_eq(envelope.to_json(), @json.parse(raw))
+}
+
+///|
+test "envelope with a known and an unknown message key is rejected" {
+  let raw =
+    #|{"testRunStarted":{"timestamp":{"seconds":1,"nanos":0}},"futureMessage":{}}
+  let message = try parse_ndjson_line(raw) catch {
+    e => e.to_string()
+  } noraise {
+    _ => "no error"
+  }
+  assert_true(message.contains("more than one message"), msg=message)
+}
+
+///|
+test "empty envelope is rejected" {
+  let message = try parse_ndjson_line("{}") catch {
+    e => e.to_string()
+  } noraise {
+    _ => "no error"
+  }
+  assert_true(message.contains("no message"), msg=message)
 }

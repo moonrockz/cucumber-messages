@@ -114,6 +114,7 @@ pub enum Envelope {
   GherkinDocument(GherkinDocument)
   Pickle(Pickle)
   TestCase(TestCase)
+  UnknownMessage(String, Json)
 }
 pub fn Envelope::to_json(Self) -> Json
 pub fn Envelope::to_ndjson_line(Self) -> String
