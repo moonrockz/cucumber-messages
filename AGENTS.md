@@ -269,6 +269,7 @@ Run `mise tasks` to list all tasks. Key tasks:
 | `test:all`              | Run all tests                                     |
 | `lint:fmt`              | Check that sources are formatted                  |
 | `lint:check`            | Type-check sources                                |
+| `lint:strict`           | Type-check sources, fail on any warning           |
 | `release:version`       | Compute next version from conventional commits    |
 | `release:changelog`     | Generate CHANGELOG.md                             |
 | `release:notes`         | Generate release notes for latest version         |
