@@ -58,9 +58,13 @@ let ndjson = @cm.envelopes_to_ndjson(envelopes)
 
 ## Compatibility
 
-This library targets **Cucumber Messages protocol v27.0.0**. It is designed to
-interoperate with other Cucumber implementations (Java, JavaScript, Ruby,
-Python, Go, etc.) via the shared NDJSON format.
+This library targets **Cucumber Messages protocol v34.2.1** (see
+`@cm.protocol_version`). It is designed to interoperate with other Cucumber
+implementations (Java, JavaScript, Ruby, Python, Go, etc.) via the shared
+NDJSON format.
+
+Every sample of the [Cucumber Compatibility Kit](https://github.com/cucumber/compatibility-kit)
+v31.0.0 is parsed and serialized back to identical JSON in the test suite.
 
 ## Related Projects
 
