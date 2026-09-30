@@ -66,6 +66,22 @@ NDJSON format.
 Every sample of the [Cucumber Compatibility Kit](https://github.com/cucumber/compatibility-kit)
 v31.0.0 is parsed and serialized back to identical JSON in the test suite.
 
+## Parsing rules
+
+- **Unknown message types** (for example a message added by a newer protocol
+  version) decode as `Envelope::UnknownMessage(key, value)` and serialize back
+  to the same JSON.
+- **Unknown fields inside a known message** are ignored on parse and are not
+  written back. The protocol only adds optional fields, so a reader can skip
+  them safely.
+- **`null`** on an optional field decodes as `None`. Serialization omits `None`
+  fields.
+- **Validation:** an envelope must hold exactly one message. Integers must have
+  no fractional part, and values outside the schema ranges (for example
+  `nanos` outside `0..999999999`) raise an error.
+- `parse_ndjson` raises `NdjsonParseError` with the 1-based line number of the
+  bad line. `envelopes_to_ndjson` ends every line with `\n`.
+
 ## Related Projects
 
 - [moonrockz/gherkin](https://github.com/moonrockz/gherkin) -- Gherkin parser

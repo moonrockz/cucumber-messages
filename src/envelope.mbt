@@ -449,3 +449,14 @@ test "empty envelope is rejected" {
   }
   assert_true(message.contains("no message"), msg=message)
 }
+
+///|
+test "unknown fields inside a known message are ignored" {
+  let raw =
+    #|{"testRunStarted":{"timestamp":{"seconds":1,"nanos":0},"futureField":{"a":1}}}
+  let envelope = parse_ndjson_line(raw)
+  assert_eq(
+    envelope.to_json().stringify(),
+    "{\"testRunStarted\":{\"timestamp\":{\"seconds\":1,\"nanos\":0}}}",
+  )
+}
