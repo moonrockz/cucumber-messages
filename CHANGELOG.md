@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-09-30
+
+### Added
+
+- [**breaking**] **pickle:** Add argumentIndex to PickleDocString and PickleTable
+- Implement Cucumber Messages protocol 34.2.1
+
+### Documentation
+
+- State protocol v34.2.1 and CCK v31.0.0 compatibility in README
+
+### Fixed
+
+- [**breaking**] **primitives:** Use Int64 for Timestamp and Duration seconds
+
 ## [0.3.0] - 2026-09-27
 
 ### Added
@@ -27,10 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial cucumber-messages MoonBit port with all 21 Envelope variants
 - **cck:** Add Cucumber Compatibility Kit validation for protocol v31.1.0
-
-### Changed
-
-- Merge pull request #1 from moonrockz/feat/cck-compatibility
 
 ### Documentation
 

@@ -172,3 +172,21 @@ test "cck/global-hooks: parse all envelopes" {
     _ => panic()
   }
 }
+
+///|
+/// Assert that each NDJSON line parses and serializes back to equal JSON.
+fn assert_ndjson_roundtrip(data : String) -> Unit raise {
+  for line in data.split("\n") {
+    let text = line.trim().to_owned()
+    if text.length() == 0 {
+      continue
+    }
+    let expected = @json.parse(text)
+    let actual = @cucumber-messages.parse_ndjson_line(text).to_json()
+    if actual != expected {
+      fail(
+        "NDJSON round-trip mismatch:\n  input:  \{text}\n  output: \{actual.stringify()}",
+      )
+    }
+  }
+}

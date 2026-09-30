@@ -79,10 +79,12 @@ pub struct DocString {
 pub fn DocString::to_json(Self) -> Json
 
 pub struct Duration {
-  seconds : Int
+  seconds : Int64
   nanos : Int
-} derive(ToJson, @json.FromJson)
+}
 pub fn Duration::to_json(Self) -> Json
+pub impl ToJson for Duration
+pub impl @json.FromJson for Duration
 
 pub enum Envelope {
   Meta(Meta)
@@ -276,8 +278,9 @@ pub(all) struct Pickle {
 pub fn Pickle::to_json(Self) -> Json
 
 pub(all) struct PickleDocString {
-  content : String
+  argumentIndex : Int?
   mediaType : String?
+  content : String
 } derive(ToJson, @json.FromJson)
 pub fn PickleDocString::to_json(Self) -> Json
 
@@ -309,6 +312,7 @@ pub impl ToJson for PickleStepType
 pub impl @json.FromJson for PickleStepType
 
 pub(all) struct PickleTable {
+  argumentIndex : Int?
   rows : Array[PickleTableRow]
 } derive(ToJson, @json.FromJson)
 pub fn PickleTable::to_json(Self) -> Json
@@ -566,10 +570,12 @@ pub struct TestStepStarted {
 pub fn TestStepStarted::to_json(Self) -> Json
 
 pub struct Timestamp {
-  seconds : Int
+  seconds : Int64
   nanos : Int
-} derive(ToJson, @json.FromJson)
+}
 pub fn Timestamp::to_json(Self) -> Json
+pub impl ToJson for Timestamp
+pub impl @json.FromJson for Timestamp
 
 pub struct UndefinedParameterType {
   expression : String

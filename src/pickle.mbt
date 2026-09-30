@@ -13,14 +13,18 @@ pub(all) struct PickleTableRow {
 ///|
 /// PickleTable: a data table in a pickle step.
 pub(all) struct PickleTable {
+  /// 1 if declared before the doc string, 2 if declared after.
+  argumentIndex : Int?
   rows : Array[PickleTableRow]
 } derive(ToJson, FromJson)
 
 ///|
 /// PickleDocString: a doc string in a pickle step.
 pub(all) struct PickleDocString {
-  content : String
+  /// 1 if declared before the data table, 2 if declared after.
+  argumentIndex : Int?
   mediaType : String?
+  content : String
 } derive(ToJson, FromJson)
 
 ///|
@@ -176,4 +180,13 @@ test "pickle roundtrip" {
   assert_eq(pickle.tags[0].name, "@smoke")
   let back : Pickle = @json.from_json(pickle.to_json()) catch { _ => panic() }
   assert_eq(back.id, pickle.id)
+}
+
+///|
+test "pickle step argument keeps argumentIndex" {
+  let raw = "{\"docString\":{\"argumentIndex\":2,\"content\":\"text\"},\"dataTable\":{\"argumentIndex\":1,\"rows\":[]}}"
+  let arg : PickleStepArgument = @json.from_json(@json.parse(raw))
+  assert_eq(arg.docString.map(d => d.argumentIndex), Some(Some(2)))
+  assert_eq(arg.dataTable.map(t => t.argumentIndex), Some(Some(1)))
+  assert_eq(arg.to_json(), @json.parse(raw))
 }

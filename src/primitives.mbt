@@ -7,17 +7,80 @@ pub struct Location {
 
 ///|
 /// Timestamp: seconds since Unix epoch + nanos (0..999_999_999).
+/// `seconds` is an Int64 so that dates after 2038-01-19 fit.
 pub struct Timestamp {
-  seconds : Int
+  seconds : Int64
   nanos : Int
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Duration: seconds + nanos (0..999_999_999).
 pub struct Duration {
-  seconds : Int
+  seconds : Int64
   nanos : Int
-} derive(ToJson, FromJson)
+}
+
+///|
+/// Decode an integral JSON number into Int64. The core `Int64` JSON
+/// codec uses strings, but the protocol encodes `seconds` as a number.
+fn seconds_from_json(
+  json : Json,
+  path : @json.JsonPath,
+) -> Int64 raise @json.JsonDecodeError {
+  guard json is Number(n, ..) && n == n.floor() else {
+    raise @json.JsonDecodeError((path, "seconds: expected an integer number"))
+  }
+  n.to_int64()
+}
+
+///|
+fn seconds_and_nanos_from_json(
+  json : Json,
+  path : @json.JsonPath,
+  type_name : String,
+) -> (Int64, Int) raise @json.JsonDecodeError {
+  guard json is Object(obj) else {
+    raise @json.JsonDecodeError(
+      (path, "\{type_name}::from_json: expected object"),
+    )
+  }
+  guard obj.get("seconds") is Some(s) else {
+    raise @json.JsonDecodeError(
+      (path, "\{type_name}::from_json: missing seconds"),
+    )
+  }
+  guard obj.get("nanos") is Some(n) else {
+    raise @json.JsonDecodeError(
+      (path, "\{type_name}::from_json: missing nanos"),
+    )
+  }
+  (
+    seconds_from_json(s, path.add_key("seconds")),
+    @json.from_json(n, path=path.add_key("nanos")),
+  )
+}
+
+///|
+pub impl @json.FromJson for Timestamp with fn from_json(json, path) {
+  let (seconds, nanos) = seconds_and_nanos_from_json(json, path, "Timestamp")
+  Timestamp::{ seconds, nanos, }
+}
+
+///|
+pub impl ToJson for Timestamp with fn to_json(self) {
+  { "seconds": Json::number(self.seconds.to_double()), "nanos": self.nanos }
+}
+
+///|
+pub impl @json.FromJson for Duration with fn from_json(json, path) {
+  let (seconds, nanos) = seconds_and_nanos_from_json(json, path, "Duration")
+  Duration::{ seconds, nanos, }
+}
+
+///|
+pub impl ToJson for Duration with fn to_json(self) {
+  { "seconds": Json::number(self.seconds.to_double()), "nanos": self.nanos }
+}
 
 ///|
 /// Source media type for Source.mediaType.
@@ -94,4 +157,28 @@ test "duration roundtrip" {
   let back : Duration = @json.from_json(json) catch { _ => panic() }
   assert_eq(back.seconds, d.seconds)
   assert_eq(back.nanos, d.nanos)
+}
+
+///|
+test "timestamp after 2038 parses and serializes seconds as a number" {
+  let json = @json.parse("{\"seconds\":4102444800,\"nanos\":5}")
+  let ts : Timestamp = @json.from_json(json)
+  assert_eq(ts.seconds, 4102444800L)
+  assert_eq(ts.nanos, 5)
+  assert_eq(ts.to_json().stringify(), "{\"seconds\":4102444800,\"nanos\":5}")
+}
+
+///|
+test "duration with large seconds parses and serializes seconds as a number" {
+  let json = @json.parse("{\"seconds\":3000000000,\"nanos\":0}")
+  let d : Duration = @json.from_json(json)
+  assert_eq(d.seconds, 3000000000L)
+  assert_eq(d.to_json().stringify(), "{\"seconds\":3000000000,\"nanos\":0}")
+}
+
+///|
+test "timestamp rejects fractional seconds" {
+  let json = @json.parse("{\"seconds\":1.5,\"nanos\":0}")
+  let ts : Timestamp? = Some(@json.from_json(json)) catch { _ => None }
+  assert_true(ts is None)
 }
