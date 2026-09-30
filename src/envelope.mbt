@@ -26,7 +26,7 @@ pub enum Envelope {
 
 ///|
 pub impl @json.FromJson for Envelope with fn from_json(json, path) {
-  guard json is Object(obj) else {
+  guard normalize_envelope_json(json) is Object(obj) else {
     raise @json.JsonDecodeError((path, "Envelope::from_json: expected object"))
   }
   if obj.get("meta") is Some(v) {
@@ -366,4 +366,38 @@ test "envelope test case roundtrip" {
     TestCase(tc) => assert_eq(tc.pickleId, "p3")
     _ => panic()
   }
+}
+
+///|
+test "envelope treats null optional fields as absent" {
+  let raw =
+    #|{"meta":{"protocolVersion":"34.2.1","implementation":{"name":"x","version":null},"runtime":{"name":"x"},"os":{"name":"x"},"cpu":{"name":"x"},"ci":null}}
+  guard! parse_ndjson_line(raw) is Meta(m)
+  assert_eq(m.ci is None, true)
+  assert_eq(m.implementation.version, None)
+  assert_eq(
+    m.to_json().stringify(),
+    "{\"protocolVersion\":\"34.2.1\",\"implementation\":{\"name\":\"x\"},\"runtime\":{\"name\":\"x\"},\"os\":{\"name\":\"x\"},\"cpu\":{\"name\":\"x\"}}",
+  )
+}
+
+///|
+test "envelope treats null in a nested array element as absent" {
+  let raw =
+    #|{"testCase":{"id":"tc","pickleId":"p","testSteps":[{"id":"s","hookId":null,"pickleStepId":"ps","stepDefinitionIds":["sd"],"stepMatchArgumentsLists":null}],"testRunStartedId":null}}
+  guard! parse_ndjson_line(raw) is TestCase(tc)
+  assert_eq(tc.testSteps[0].hookId, None)
+  assert_eq(tc.testRunStartedId, None)
+}
+
+///|
+test "envelope reports null on a required field as missing" {
+  let raw =
+    #|{"testRunStarted":{"timestamp":null}}
+  let message = try parse_ndjson_line(raw) catch {
+    e => e.to_string()
+  } noraise {
+    _ => "no error"
+  }
+  assert_true(message.contains("Missing field timestamp"))
 }
