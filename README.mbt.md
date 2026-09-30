@@ -66,6 +66,31 @@ NDJSON format.
 Every sample of the [Cucumber Compatibility Kit](https://github.com/cucumber/compatibility-kit)
 v31.0.0 is parsed and serialized back to identical JSON in the test suite.
 
+## Streaming
+
+For long runs, read and write one envelope at a time:
+
+```moonbit
+// Read: feed chunks of any size; a partial last line waits for the next chunk.
+let reader = @cm.NdjsonReader::new()
+for chunk in chunks {
+  for envelope in reader.feed(chunk) catch { e => { println(e); [] } } {
+    handle(envelope)
+  }
+}
+// Parse a last line that has no trailing newline.
+let last = reader.finish() catch { _ => None }
+if last is Some(envelope) {
+  handle(envelope)
+}
+
+// Or read one line at a time; blank lines give None.
+let envelope = reader.read_line(line) catch { _ => None }
+
+// Write: one line per envelope to any &Logger (for example StringBuilder).
+envelope.write_ndjson(out)
+```
+
 ## Parsing rules
 
 - **Unknown message types** (for example a message added by a newer protocol

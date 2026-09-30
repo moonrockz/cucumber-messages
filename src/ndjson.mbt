@@ -28,18 +28,10 @@ pub impl Show for NdjsonParseError with fn output(self, logger) {
 /// Parse an NDJSON string (multiple lines) into an array of Envelopes.
 /// Blank lines are skipped. A bad line raises `NdjsonParseError`.
 pub fn parse_ndjson(input : String) -> Array[Envelope] raise NdjsonParseError {
-  let envelopes : Array[Envelope] = []
-  let mut line_number = 0
-  for line in input.split("\n") {
-    line_number += 1
-    let trimmed = line.trim().to_owned()
-    if trimmed.length() > 0 {
-      envelopes.push(
-        parse_ndjson_line(trimmed) catch {
-          cause => raise NdjsonParseError(line=line_number, cause~)
-        },
-      )
-    }
+  let reader = NdjsonReader::new()
+  let envelopes = reader.feed(input)
+  if reader.finish() is Some(envelope) {
+    envelopes.push(envelope)
   }
   envelopes
 }
@@ -49,9 +41,8 @@ pub fn parse_ndjson(input : String) -> Array[Envelope] raise NdjsonParseError {
 /// line ending with `\n`.
 pub fn envelopes_to_ndjson(envelopes : Array[Envelope]) -> String {
   let buf = StringBuilder()
-  for env in envelopes {
-    buf.write_string(env.to_ndjson_line())
-    buf.write_char('\n')
+  for envelope in envelopes {
+    envelope.write_ndjson(buf)
   }
   buf.to_string()
 }

@@ -118,6 +118,7 @@ pub enum Envelope {
 }
 pub fn Envelope::to_json(Self) -> Json
 pub fn Envelope::to_ndjson_line(Self) -> String
+pub fn Envelope::write_ndjson(Self, &Logger) -> Unit
 pub impl ToJson for Envelope
 pub impl @json.FromJson for Envelope
 
@@ -257,6 +258,15 @@ pub struct Meta {
   ci : Ci?
 } derive(ToJson, @json.FromJson)
 pub fn Meta::to_json(Self) -> Json
+
+pub struct NdjsonReader {
+  // private fields
+}
+pub fn NdjsonReader::feed(Self, String) -> Array[Envelope] raise NdjsonParseError
+pub fn NdjsonReader::finish(Self) -> Envelope? raise NdjsonParseError
+pub fn NdjsonReader::line_number(Self) -> Int
+pub fn NdjsonReader::new() -> Self
+pub fn NdjsonReader::read_line(Self, StringView) -> Envelope? raise NdjsonParseError
 
 pub struct ParameterType {
   id : String
