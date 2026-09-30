@@ -22,10 +22,8 @@ for file in $ndjson_files {
 
   $test_code = $test_code + $"  let envelopes = @cucumber-messages.parse_ndjson\(data\)\n"
   $test_code = $test_code + $"  assert_eq\(envelopes.length\(\), ($line_count)\)\n"
-  # Round-trip test: serialize back to NDJSON and re-parse
-  $test_code = $test_code + "  let ndjson = @cucumber-messages.envelopes_to_ndjson(envelopes)\n"
-  $test_code = $test_code + "  let back = @cucumber-messages.parse_ndjson(ndjson)\n"
-  $test_code = $test_code + $"  assert_eq\(back.length\(\), ($line_count)\)\n"
+  # Round-trip test: each envelope must serialize back to the same JSON
+  $test_code = $test_code + "  assert_ndjson_roundtrip(data)\n"
   $test_code = $test_code + "}\n\n"
 }
 
