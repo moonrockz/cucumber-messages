@@ -26,7 +26,7 @@ pub enum Envelope {
 
 ///|
 pub impl @json.FromJson for Envelope with fn from_json(json, path) {
-  guard normalize_envelope_json(json) is Object(obj) else {
+  guard normalize_envelope_json(json, path) is Object(obj) else {
     raise @json.JsonDecodeError((path, "Envelope::from_json: expected object"))
   }
   if obj.get("meta") is Some(v) {
@@ -400,4 +400,23 @@ test "envelope reports null on a required field as missing" {
     _ => "no error"
   }
   assert_true(message.contains("Missing field timestamp"))
+}
+
+///|
+test "envelope rejects fractional numbers" {
+  for
+    raw in [
+      "{\"parseError\":{\"source\":{\"uri\":\"a\",\"location\":{\"line\":1.5}},\"message\":\"m\"}}",
+      "{\"testCaseStarted\":{\"attempt\":0.5,\"id\":\"i\",\"testCaseId\":\"t\",\"timestamp\":{\"seconds\":1,\"nanos\":0}}}",
+    ] {
+    let message = try parse_ndjson_line(raw) catch {
+      e => e.to_string()
+    } noraise {
+      _ => "no error"
+    }
+    assert_true(
+      message.contains("expected an integer"),
+      msg="\{raw}: \{message}",
+    )
+  }
 }
