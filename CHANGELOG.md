@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-09-30
+
+### Added
+
+- [**breaking**] **envelope:** Keep unknown message types instead of failing
+- **ndjson:** Add incremental NdjsonReader and Envelope::write_ndjson
+
+### Documentation
+
+- Document parsing rules for unknown data, null and validation
+- **attachment:** Mark Attachment.url and Attachment.source as deprecated
+- Use protocol version 34.2.1 in the README example
+
+### Fixed
+
+- **ndjson:** Report the input line number when parse_ndjson fails
+- **ndjson:** End every line written by envelopes_to_ndjson with a newline
+- **envelope:** Decode explicit null on optional fields as None
+- **primitives:** Reject seconds outside the Int64 range
+- **primitives:** Reject Timestamp and Duration nanos outside 0..999999999
+- **pickle:** Reject argumentIndex outside 1..2
+- **envelope:** Reject fractional numbers instead of truncating them
+- **envelope:** Reject an envelope that holds more than one message
+- Enforce schema minimums and minItems on decode
+- **package:** Keep vendor and dev files out of the published package
+
 ## [0.4.0] - 2026-09-30
 
 ### Added

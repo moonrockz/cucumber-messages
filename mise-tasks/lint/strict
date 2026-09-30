@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Type-check MoonBit sources and fail on any warning"
+set -euo pipefail
+
+moon check --deny-warn

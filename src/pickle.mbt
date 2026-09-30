@@ -8,7 +8,13 @@ pub(all) struct PickleTableCell {
 /// PickleTableRow: a row in a pickle data table.
 pub(all) struct PickleTableRow {
   cells : Array[PickleTableCell]
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for PickleTableRow with fn from_json(json, path) {
+  let obj = expect_object(json, path, "PickleTableRow")
+  PickleTableRow::{ cells: non_empty_array_field(obj, "cells", path), }
+}
 
 ///|
 /// PickleTable: a data table in a pickle step.
@@ -16,7 +22,20 @@ pub(all) struct PickleTable {
   /// 1 if declared before the doc string, 2 if declared after.
   argumentIndex : Int?
   rows : Array[PickleTableRow]
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for PickleTable with fn from_json(json, path) {
+  guard json is Object(obj) else {
+    raise @json.JsonDecodeError(
+      (path, "PickleTable::from_json: expected object"),
+    )
+  }
+  PickleTable::{
+    argumentIndex: argument_index_field(obj, path),
+    rows: required_field(obj, "rows", path),
+  }
+}
 
 ///|
 /// PickleDocString: a doc string in a pickle step.
@@ -25,7 +44,21 @@ pub(all) struct PickleDocString {
   argumentIndex : Int?
   mediaType : String?
   content : String
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for PickleDocString with fn from_json(json, path) {
+  guard json is Object(obj) else {
+    raise @json.JsonDecodeError(
+      (path, "PickleDocString::from_json: expected object"),
+    )
+  }
+  PickleDocString::{
+    argumentIndex: argument_index_field(obj, path),
+    mediaType: optional_field(obj, "mediaType", path),
+    content: required_field(obj, "content", path),
+  }
+}
 
 ///|
 /// PickleStepArgument: argument for a pickle step.
@@ -100,13 +133,9 @@ pub impl @json.FromJson for PickleStep with fn from_json(json, path) {
     None =>
       raise @json.JsonDecodeError((path, "PickleStep::from_json: missing text"))
   }
-  let astNodeIds : Array[String] = match obj.get("astNodeIds") {
-    Some(v) => @json.from_json(v, path=path.add_key("astNodeIds"))
-    None =>
-      raise @json.JsonDecodeError(
-        (path, "PickleStep::from_json: missing astNodeIds"),
-      )
-  }
+  let astNodeIds : Array[String] = non_empty_array_field(
+    obj, "astNodeIds", path,
+  )
   let type_ : PickleStepType? = match obj.get("type") {
     Some(Null) | None => None
     Some(v) => Some(@json.from_json(v, path=path.add_key("type")))
@@ -154,7 +183,22 @@ pub(all) struct Pickle {
   tags : Array[PickleTag]
   astNodeIds : Array[String]
   location : Location?
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for Pickle with fn from_json(json, path) {
+  let obj = expect_object(json, path, "Pickle")
+  Pickle::{
+    id: required_field(obj, "id", path),
+    uri: required_field(obj, "uri", path),
+    name: required_field(obj, "name", path),
+    language: required_field(obj, "language", path),
+    steps: required_field(obj, "steps", path),
+    tags: required_field(obj, "tags", path),
+    astNodeIds: non_empty_array_field(obj, "astNodeIds", path),
+    location: optional_field(obj, "location", path),
+  }
+}
 
 ///|
 test "pickle step type roundtrip" {
@@ -189,4 +233,35 @@ test "pickle step argument keeps argumentIndex" {
   assert_eq(arg.docString.map(d => d.argumentIndex), Some(Some(2)))
   assert_eq(arg.dataTable.map(t => t.argumentIndex), Some(Some(1)))
   assert_eq(arg.to_json(), @json.parse(raw))
+}
+
+///|
+test "argumentIndex outside 1..2 is rejected" {
+  for
+    raw in [
+      "{\"argumentIndex\":0,\"rows\":[]}", "{\"argumentIndex\":3,\"rows\":[]}",
+    ] {
+    let t : PickleTable? = Some(@json.from_json(@json.parse(raw))) catch {
+      _ => None
+    }
+    assert_true(t is None, msg="accepted \{raw}")
+  }
+  for
+    raw in [
+      "{\"argumentIndex\":0,\"content\":\"c\"}", "{\"argumentIndex\":3,\"content\":\"c\"}",
+    ] {
+    let d : PickleDocString? = Some(@json.from_json(@json.parse(raw))) catch {
+      _ => None
+    }
+    assert_true(d is None, msg="accepted \{raw}")
+  }
+  let t : PickleTable = @json.from_json(@json.parse("{\"rows\":[]}"))
+  assert_eq(t.argumentIndex, None)
+  let d : PickleDocString = @json.from_json(
+    @json.parse(
+      "{\"argumentIndex\":2,\"mediaType\":\"text/plain\",\"content\":\"c\"}",
+    ),
+  )
+  assert_eq(d.argumentIndex, Some(2))
+  assert_eq(d.mediaType, Some("text/plain"))
 }

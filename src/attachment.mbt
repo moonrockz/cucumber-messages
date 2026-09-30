@@ -42,9 +42,12 @@ pub struct Attachment {
   contentEncoding : AttachmentContentEncoding
   mediaType : String
   fileName : String?
+  /// Deprecated since messages 32.0.0. Kept for reading older streams.
   source : Source?
   testCaseStartedId : String?
   testStepId : String?
+  /// Deprecated since messages 32.0.0: emit an `ExternalAttachment` message
+  /// instead. Kept for reading older streams.
   url : String?
   testRunStartedId : String?
   testRunHookStartedId : String?

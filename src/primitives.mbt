@@ -3,7 +3,16 @@
 pub struct Location {
   line : Int
   column : Int?
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for Location with fn from_json(json, path) {
+  let obj = expect_object(json, path, "Location")
+  Location::{
+    line: int_field_min(obj, "line", path, min=1),
+    column: optional_int_field_min(obj, "column", path, min=1),
+  }
+}
 
 ///|
 /// Timestamp: seconds since Unix epoch + nanos (0..999_999_999).
@@ -30,6 +39,10 @@ fn seconds_from_json(
   guard json is Number(n, ..) && n == n.floor() else {
     raise @json.JsonDecodeError((path, "seconds: expected an integer number"))
   }
+  // 2^63: the smallest Double above Int64 max; -2^63 is Int64 min.
+  guard n >= -9223372036854775808.0 && n < 9223372036854775808.0 else {
+    raise @json.JsonDecodeError((path, "seconds: out of Int64 range"))
+  }
   n.to_int64()
 }
 
@@ -54,10 +67,10 @@ fn seconds_and_nanos_from_json(
       (path, "\{type_name}::from_json: missing nanos"),
     )
   }
-  (
-    seconds_from_json(s, path.add_key("seconds")),
-    @json.from_json(n, path=path.add_key("nanos")),
-  )
+  let nanos_path = path.add_key("nanos")
+  let nanos : Int = @json.from_json(n, path=nanos_path)
+  check_int_range(nanos, nanos_path, min=0, max=999_999_999)
+  (seconds_from_json(s, path.add_key("seconds")), nanos)
 }
 
 ///|
@@ -181,4 +194,41 @@ test "timestamp rejects fractional seconds" {
   let json = @json.parse("{\"seconds\":1.5,\"nanos\":0}")
   let ts : Timestamp? = Some(@json.from_json(json)) catch { _ => None }
   assert_true(ts is None)
+}
+
+///|
+test "seconds outside the Int64 range are rejected" {
+  for
+    raw in [
+      "{\"seconds\":1e300,\"nanos\":0}", "{\"seconds\":-1e300,\"nanos\":0}", "{\"seconds\":9223372036854775808,\"nanos\":0}",
+    ] {
+    let ts : Timestamp? = Some(@json.from_json(@json.parse(raw))) catch {
+      _ => None
+    }
+    assert_true(ts is None, msg="accepted \{raw}")
+    let d : Duration? = Some(@json.from_json(@json.parse(raw))) catch {
+      _ => None
+    }
+    assert_true(d is None, msg="accepted \{raw}")
+  }
+}
+
+///|
+test "nanos outside 0..999999999 are rejected" {
+  for nanos in ["-1", "1000000000"] {
+    let raw = "{\"seconds\":1,\"nanos\":\{nanos}}"
+    let ts : Timestamp? = Some(@json.from_json(@json.parse(raw))) catch {
+      _ => None
+    }
+    assert_true(ts is None, msg="accepted nanos \{nanos}")
+    let d : Duration? = Some(@json.from_json(@json.parse(raw))) catch {
+      _ => None
+    }
+    assert_true(d is None, msg="accepted nanos \{nanos}")
+  }
+  for nanos in ["0", "999999999"] {
+    let raw = "{\"seconds\":1,\"nanos\":\{nanos}}"
+    let ts : Timestamp = @json.from_json(@json.parse(raw))
+    assert_eq(ts.to_json(), @json.parse(raw))
+  }
 }

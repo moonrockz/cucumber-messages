@@ -12,29 +12,37 @@ pub fn Envelope::to_ndjson_line(self : Envelope) -> String {
 }
 
 ///|
+/// Error raised by `parse_ndjson` when one line of the input is not a valid
+/// envelope. `line` is the 1-based line number in the input.
+pub suberror NdjsonParseError {
+  NdjsonParseError(line~ : Int, cause~ : Error)
+}
+
+///|
+pub impl Show for NdjsonParseError with fn output(self, logger) {
+  let NdjsonParseError(line~, cause~) = self
+  logger.write_string("NDJSON line \{line}: \{cause}")
+}
+
+///|
 /// Parse an NDJSON string (multiple lines) into an array of Envelopes.
-/// Blank lines are skipped.
-pub fn parse_ndjson(input : String) -> Array[Envelope] raise {
-  let envelopes : Array[Envelope] = []
-  let lines = input.split("\n")
-  for line in lines {
-    let trimmed = line.trim().to_owned()
-    if trimmed.length() > 0 {
-      envelopes.push(parse_ndjson_line(trimmed))
-    }
+/// Blank lines are skipped. A bad line raises `NdjsonParseError`.
+pub fn parse_ndjson(input : String) -> Array[Envelope] raise NdjsonParseError {
+  let reader = NdjsonReader::new()
+  let envelopes = reader.feed(input)
+  if reader.finish() is Some(envelope) {
+    envelopes.push(envelope)
   }
   envelopes
 }
 
 ///|
-/// Serialize an array of Envelopes to NDJSON (one JSON object per line).
+/// Serialize an array of Envelopes to NDJSON: one JSON object per line, each
+/// line ending with `\n`.
 pub fn envelopes_to_ndjson(envelopes : Array[Envelope]) -> String {
   let buf = StringBuilder()
-  for i, env in envelopes {
-    if i > 0 {
-      buf.write_char('\n')
-    }
-    buf.write_string(env.to_ndjson_line())
+  for envelope in envelopes {
+    envelope.write_ndjson(buf)
   }
   buf.to_string()
 }
@@ -205,4 +213,42 @@ test "fixture all_variants ndjson roundtrip" {
     UndefinedParameterType(u) => assert_eq(u.name, "color")
     _ => panic()
   }
+}
+
+///|
+test "parse_ndjson reports the line number of a bad line" {
+  let input =
+    #|{"testRunStarted":{"timestamp":{"seconds":1,"nanos":0}}}
+    #|
+    #|{bad}
+  let message = try parse_ndjson(input) catch {
+    NdjsonParseError(line~, ..) => "line \{line}"
+  } noraise {
+    _ => "no error"
+  }
+  assert_eq(message, "line 3")
+}
+
+///|
+test "NdjsonParseError message names the line" {
+  let message = try parse_ndjson("\n{bad}") catch {
+    e => e.to_string()
+  } noraise {
+    _ => "no error"
+  }
+  assert_true(message.has_prefix("NDJSON line 2: "))
+}
+
+///|
+test "envelopes_to_ndjson ends every line with a newline" {
+  let input =
+    #|{"testRunStarted":{"timestamp":{"seconds":1,"nanos":0}}}
+    #|{"testRunFinished":{"success":true,"timestamp":{"seconds":2,"nanos":0}}}
+  let envelopes = parse_ndjson(input)
+  let out = envelopes_to_ndjson(envelopes)
+  assert_true(out.has_suffix("}\n"))
+  assert_eq(out.split("\n").count(), 3)
+  assert_eq(envelopes_to_ndjson([]), "")
+  // Appending two outputs keeps every envelope on its own line.
+  assert_eq(parse_ndjson(out + out).length(), 4)
 }

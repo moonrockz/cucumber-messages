@@ -23,7 +23,19 @@ pub struct TestCaseStarted {
   testCaseId : String
   workerId : String?
   timestamp : Timestamp
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for TestCaseStarted with fn from_json(json, path) {
+  let obj = expect_object(json, path, "TestCaseStarted")
+  TestCaseStarted::{
+    attempt: int_field_min(obj, "attempt", path, min=0),
+    id: required_field(obj, "id", path),
+    testCaseId: required_field(obj, "testCaseId", path),
+    workerId: optional_field(obj, "workerId", path),
+    timestamp: required_field(obj, "timestamp", path),
+  }
+}
 
 ///|
 /// TestCaseFinished: test case attempt finished.

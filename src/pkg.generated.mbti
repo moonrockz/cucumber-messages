@@ -8,13 +8,19 @@ import {
 // Values
 pub fn envelopes_to_ndjson(Array[Envelope]) -> String
 
-pub fn parse_ndjson(String) -> Array[Envelope] raise
+pub fn parse_ndjson(String) -> Array[Envelope] raise NdjsonParseError
 
 pub fn parse_ndjson_line(String) -> Envelope raise
 
 pub let protocol_version : String
 
 // Errors
+pub suberror NdjsonParseError {
+  NdjsonParseError(line~ : Int, cause~ : Error)
+}
+pub fn NdjsonParseError::output(Self, &Logger) -> Unit
+pub fn NdjsonParseError::to_string(Self) -> String
+pub impl Show for NdjsonParseError
 
 // Types and methods
 pub struct Attachment {
@@ -108,9 +114,11 @@ pub enum Envelope {
   GherkinDocument(GherkinDocument)
   Pickle(Pickle)
   TestCase(TestCase)
+  UnknownMessage(String, Json)
 }
 pub fn Envelope::to_json(Self) -> Json
 pub fn Envelope::to_ndjson_line(Self) -> String
+pub fn Envelope::write_ndjson(Self, &Logger) -> Unit
 pub impl ToJson for Envelope
 pub impl @json.FromJson for Envelope
 
@@ -182,8 +190,9 @@ pub struct Group {
   children : Array[Group]?
   start : Int?
   value : String?
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn Group::to_json(Self) -> Json
+pub impl @json.FromJson for Group
 
 pub struct Hook {
   id : String
@@ -236,8 +245,9 @@ pub impl @json.FromJson for KeywordType
 pub struct Location {
   line : Int
   column : Int?
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn Location::to_json(Self) -> Json
+pub impl @json.FromJson for Location
 
 pub struct Meta {
   protocolVersion : String
@@ -249,6 +259,15 @@ pub struct Meta {
 } derive(ToJson, @json.FromJson)
 pub fn Meta::to_json(Self) -> Json
 
+pub struct NdjsonReader {
+  // private fields
+}
+pub fn NdjsonReader::feed(Self, String) -> Array[Envelope] raise NdjsonParseError
+pub fn NdjsonReader::finish(Self) -> Envelope? raise NdjsonParseError
+pub fn NdjsonReader::line_number(Self) -> Int
+pub fn NdjsonReader::new() -> Self
+pub fn NdjsonReader::read_line(Self, StringView) -> Envelope? raise NdjsonParseError
+
 pub struct ParameterType {
   id : String
   name : String
@@ -256,8 +275,9 @@ pub struct ParameterType {
   regularExpressions : Array[String]
   useForSnippets : Bool
   sourceReference : SourceReference?
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn ParameterType::to_json(Self) -> Json
+pub impl @json.FromJson for ParameterType
 
 pub struct ParseError {
   source : SourceReference
@@ -274,15 +294,17 @@ pub(all) struct Pickle {
   tags : Array[PickleTag]
   astNodeIds : Array[String]
   location : Location?
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn Pickle::to_json(Self) -> Json
+pub impl @json.FromJson for Pickle
 
 pub(all) struct PickleDocString {
   argumentIndex : Int?
   mediaType : String?
   content : String
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn PickleDocString::to_json(Self) -> Json
+pub impl @json.FromJson for PickleDocString
 
 pub(all) struct PickleStep {
   id : String
@@ -314,8 +336,9 @@ pub impl @json.FromJson for PickleStepType
 pub(all) struct PickleTable {
   argumentIndex : Int?
   rows : Array[PickleTableRow]
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn PickleTable::to_json(Self) -> Json
+pub impl @json.FromJson for PickleTable
 
 pub(all) struct PickleTableCell {
   value : String
@@ -324,8 +347,9 @@ pub fn PickleTableCell::to_json(Self) -> Json
 
 pub(all) struct PickleTableRow {
   cells : Array[PickleTableCell]
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn PickleTableRow::to_json(Self) -> Json
+pub impl @json.FromJson for PickleTableRow
 
 pub(all) struct PickleTag {
   name : String
@@ -446,8 +470,9 @@ pub struct Suggestion {
   id : String
   pickleStepId : String
   snippets : Array[Snippet]
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn Suggestion::to_json(Self) -> Json
+pub impl @json.FromJson for Suggestion
 
 pub struct TableCell {
   location : Location
@@ -490,8 +515,9 @@ pub struct TestCaseStarted {
   testCaseId : String
   workerId : String?
   timestamp : Timestamp
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn TestCaseStarted::to_json(Self) -> Json
+pub impl @json.FromJson for TestCaseStarted
 
 pub struct TestRunFinished {
   message : String?

@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "cucumber_messages",
+  "project_id": "7b348c57-aa59-4219-969b-585c6757e7b9"
+}

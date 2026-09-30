@@ -22,6 +22,10 @@ pub enum Envelope {
   GherkinDocument(GherkinDocument)
   Pickle(Pickle)
   TestCase(TestCase)
+  /// A message type this library does not know, for example one added by a
+  /// newer protocol version. Holds the message key and its JSON value
+  /// unchanged, so it serializes back to the same JSON.
+  UnknownMessage(String, Json)
 }
 
 ///|
@@ -29,96 +33,74 @@ pub impl @json.FromJson for Envelope with fn from_json(json, path) {
   guard json is Object(obj) else {
     raise @json.JsonDecodeError((path, "Envelope::from_json: expected object"))
   }
-  if obj.get("meta") is Some(v) {
-    return Meta(@json.from_json(v, path=path.add_key("meta")))
+  let mut found : (String, Envelope)? = None
+  for key, value in obj {
+    let envelope = match decode_message(key, value, path.add_key(key)) {
+      Some(envelope) => envelope
+      None => UnknownMessage(key, value)
+    }
+    if found is Some((first, _)) {
+      raise @json.JsonDecodeError(
+        (
+          path,
+          "Envelope::from_json: more than one message key: \{first}, \{key}",
+        ),
+      )
+    }
+    found = Some((key, envelope))
   }
-  if obj.get("source") is Some(v) {
-    return Source(@json.from_json(v, path=path.add_key("source")))
-  }
-  if obj.get("parseError") is Some(v) {
-    return ParseError(@json.from_json(v, path=path.add_key("parseError")))
-  }
-  if obj.get("testRunStarted") is Some(v) {
-    return TestRunStarted(
-      @json.from_json(v, path=path.add_key("testRunStarted")),
+  guard found is Some((_, envelope)) else {
+    raise @json.JsonDecodeError(
+      (path, "Envelope::from_json: no message key found"),
     )
   }
-  if obj.get("testRunFinished") is Some(v) {
-    return TestRunFinished(
-      @json.from_json(v, path=path.add_key("testRunFinished")),
-    )
+  envelope
+}
+
+///|
+let known_message_keys : Set[String] = Set::from_array([
+  "meta", "source", "parseError", "testRunStarted", "testRunFinished", "undefinedParameterType",
+  "testCaseStarted", "testCaseFinished", "testStepStarted", "testStepFinished", "attachment",
+  "externalAttachment", "hook", "stepDefinition", "parameterType", "suggestion",
+  "testRunHookStarted", "testRunHookFinished", "gherkinDocument", "pickle", "testCase",
+])
+
+///|
+/// Decode the message stored under `key`, or `None` when `key` is not a
+/// known message type. Only known messages are normalized.
+fn decode_message(
+  key : String,
+  value : Json,
+  path : @json.JsonPath,
+) -> Envelope? raise @json.JsonDecodeError {
+  guard known_message_keys.contains(key) else { return None }
+  let value = normalize_envelope_json(value, path)
+  let envelope = match key {
+    "meta" => Meta(@json.from_json(value, path~))
+    "source" => Source(@json.from_json(value, path~))
+    "parseError" => ParseError(@json.from_json(value, path~))
+    "testRunStarted" => TestRunStarted(@json.from_json(value, path~))
+    "testRunFinished" => TestRunFinished(@json.from_json(value, path~))
+    "undefinedParameterType" =>
+      UndefinedParameterType(@json.from_json(value, path~))
+    "testCaseStarted" => TestCaseStarted(@json.from_json(value, path~))
+    "testCaseFinished" => TestCaseFinished(@json.from_json(value, path~))
+    "testStepStarted" => TestStepStarted(@json.from_json(value, path~))
+    "testStepFinished" => TestStepFinished(@json.from_json(value, path~))
+    "attachment" => Attachment(@json.from_json(value, path~))
+    "externalAttachment" => ExternalAttachment(@json.from_json(value, path~))
+    "hook" => Hook(@json.from_json(value, path~))
+    "stepDefinition" => StepDefinition(@json.from_json(value, path~))
+    "parameterType" => ParameterType(@json.from_json(value, path~))
+    "suggestion" => Suggestion(@json.from_json(value, path~))
+    "testRunHookStarted" => TestRunHookStarted(@json.from_json(value, path~))
+    "testRunHookFinished" => TestRunHookFinished(@json.from_json(value, path~))
+    "gherkinDocument" => GherkinDocument(@json.from_json(value, path~))
+    "pickle" => Pickle(@json.from_json(value, path~))
+    "testCase" => TestCase(@json.from_json(value, path~))
+    _ => return None
   }
-  if obj.get("undefinedParameterType") is Some(v) {
-    return UndefinedParameterType(
-      @json.from_json(v, path=path.add_key("undefinedParameterType")),
-    )
-  }
-  if obj.get("testCaseStarted") is Some(v) {
-    return TestCaseStarted(
-      @json.from_json(v, path=path.add_key("testCaseStarted")),
-    )
-  }
-  if obj.get("testCaseFinished") is Some(v) {
-    return TestCaseFinished(
-      @json.from_json(v, path=path.add_key("testCaseFinished")),
-    )
-  }
-  if obj.get("testStepStarted") is Some(v) {
-    return TestStepStarted(
-      @json.from_json(v, path=path.add_key("testStepStarted")),
-    )
-  }
-  if obj.get("testStepFinished") is Some(v) {
-    return TestStepFinished(
-      @json.from_json(v, path=path.add_key("testStepFinished")),
-    )
-  }
-  if obj.get("attachment") is Some(v) {
-    return Attachment(@json.from_json(v, path=path.add_key("attachment")))
-  }
-  if obj.get("externalAttachment") is Some(v) {
-    return ExternalAttachment(
-      @json.from_json(v, path=path.add_key("externalAttachment")),
-    )
-  }
-  if obj.get("hook") is Some(v) {
-    return Hook(@json.from_json(v, path=path.add_key("hook")))
-  }
-  if obj.get("stepDefinition") is Some(v) {
-    return StepDefinition(
-      @json.from_json(v, path=path.add_key("stepDefinition")),
-    )
-  }
-  if obj.get("parameterType") is Some(v) {
-    return ParameterType(@json.from_json(v, path=path.add_key("parameterType")))
-  }
-  if obj.get("suggestion") is Some(v) {
-    return Suggestion(@json.from_json(v, path=path.add_key("suggestion")))
-  }
-  if obj.get("testRunHookStarted") is Some(v) {
-    return TestRunHookStarted(
-      @json.from_json(v, path=path.add_key("testRunHookStarted")),
-    )
-  }
-  if obj.get("testRunHookFinished") is Some(v) {
-    return TestRunHookFinished(
-      @json.from_json(v, path=path.add_key("testRunHookFinished")),
-    )
-  }
-  if obj.get("gherkinDocument") is Some(v) {
-    return GherkinDocument(
-      @json.from_json(v, path=path.add_key("gherkinDocument")),
-    )
-  }
-  if obj.get("pickle") is Some(v) {
-    return Pickle(@json.from_json(v, path=path.add_key("pickle")))
-  }
-  if obj.get("testCase") is Some(v) {
-    return TestCase(@json.from_json(v, path=path.add_key("testCase")))
-  }
-  raise @json.JsonDecodeError(
-    (path, "Envelope::from_json: no known message key found"),
-  )
+  Some(envelope)
 }
 
 ///|
@@ -145,6 +127,7 @@ pub impl ToJson for Envelope with fn to_json(self) {
     GherkinDocument(g) => { "gherkinDocument": g.to_json() }
     Pickle(p) => { "pickle": p.to_json() }
     TestCase(t) => { "testCase": t.to_json() }
+    UnknownMessage(key, value) => Map::from_array([(key, value)])
   }
   o.to_json()
 }
@@ -366,4 +349,114 @@ test "envelope test case roundtrip" {
     TestCase(tc) => assert_eq(tc.pickleId, "p3")
     _ => panic()
   }
+}
+
+///|
+test "envelope treats null optional fields as absent" {
+  let raw =
+    #|{"meta":{"protocolVersion":"34.2.1","implementation":{"name":"x","version":null},"runtime":{"name":"x"},"os":{"name":"x"},"cpu":{"name":"x"},"ci":null}}
+  guard! parse_ndjson_line(raw) is Meta(m)
+  assert_eq(m.ci is None, true)
+  assert_eq(m.implementation.version, None)
+  assert_eq(
+    m.to_json().stringify(),
+    "{\"protocolVersion\":\"34.2.1\",\"implementation\":{\"name\":\"x\"},\"runtime\":{\"name\":\"x\"},\"os\":{\"name\":\"x\"},\"cpu\":{\"name\":\"x\"}}",
+  )
+}
+
+///|
+test "envelope treats null in a nested array element as absent" {
+  let raw =
+    #|{"testCase":{"id":"tc","pickleId":"p","testSteps":[{"id":"s","hookId":null,"pickleStepId":"ps","stepDefinitionIds":["sd"],"stepMatchArgumentsLists":null}],"testRunStartedId":null}}
+  guard! parse_ndjson_line(raw) is TestCase(tc)
+  assert_eq(tc.testSteps[0].hookId, None)
+  assert_eq(tc.testRunStartedId, None)
+}
+
+///|
+test "envelope reports null on a required field as missing" {
+  let raw =
+    #|{"testRunStarted":{"timestamp":null}}
+  let message = try parse_ndjson_line(raw) catch {
+    e => e.to_string()
+  } noraise {
+    _ => "no error"
+  }
+  assert_true(message.contains("Missing field timestamp"))
+}
+
+///|
+test "envelope rejects fractional numbers" {
+  for
+    raw in [
+      "{\"parseError\":{\"source\":{\"uri\":\"a\",\"location\":{\"line\":1.5}},\"message\":\"m\"}}",
+      "{\"testCaseStarted\":{\"attempt\":0.5,\"id\":\"i\",\"testCaseId\":\"t\",\"timestamp\":{\"seconds\":1,\"nanos\":0}}}",
+    ] {
+    let message = try parse_ndjson_line(raw) catch {
+      e => e.to_string()
+    } noraise {
+      _ => "no error"
+    }
+    assert_true(
+      message.contains("expected an integer"),
+      msg="\{raw}: \{message}",
+    )
+  }
+}
+
+///|
+test "envelope with two message keys is rejected" {
+  let raw =
+    #|{"testRunStarted":{"timestamp":{"seconds":1,"nanos":0}},"testRunFinished":{"success":true,"timestamp":{"seconds":1,"nanos":0}}}
+  let message = try parse_ndjson_line(raw) catch {
+    e => e.to_string()
+  } noraise {
+    _ => "no error"
+  }
+  assert_true(message.contains("more than one message"), msg=message)
+}
+
+///|
+test "envelope keeps an unknown message type" {
+  let raw =
+    #|{"futureMessage":{"id":"f1","ratio":0.5,"note":null,"items":[1,2]}}
+  let envelope = parse_ndjson_line(raw)
+  guard! envelope is UnknownMessage(key, value)
+  assert_eq(key, "futureMessage")
+  guard! @json.parse(raw) is Object(obj)
+  assert_eq(Some(value), obj.get("futureMessage"))
+  assert_eq(envelope.to_json(), @json.parse(raw))
+}
+
+///|
+test "envelope with a known and an unknown message key is rejected" {
+  let raw =
+    #|{"testRunStarted":{"timestamp":{"seconds":1,"nanos":0}},"futureMessage":{}}
+  let message = try parse_ndjson_line(raw) catch {
+    e => e.to_string()
+  } noraise {
+    _ => "no error"
+  }
+  assert_true(message.contains("more than one message"), msg=message)
+}
+
+///|
+test "empty envelope is rejected" {
+  let message = try parse_ndjson_line("{}") catch {
+    e => e.to_string()
+  } noraise {
+    _ => "no error"
+  }
+  assert_true(message.contains("no message"), msg=message)
+}
+
+///|
+test "unknown fields inside a known message are ignored" {
+  let raw =
+    #|{"testRunStarted":{"timestamp":{"seconds":1,"nanos":0},"futureField":{"a":1}}}
+  let envelope = parse_ndjson_line(raw)
+  assert_eq(
+    envelope.to_json().stringify(),
+    "{\"testRunStarted\":{\"timestamp\":{\"seconds\":1,\"nanos\":0}}}",
+  )
 }

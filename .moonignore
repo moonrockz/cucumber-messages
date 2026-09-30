@@ -1,0 +1,16 @@
+# Files left out of the package that `moon package` / `moon publish` builds.
+# gitignore syntax. This file takes precedence over .gitignore here, so the
+# build output entries from .gitignore are repeated.
+
+# Build output
+_build/
+target/
+
+# Development-only files
+/vendor/
+/docs/
+/mise-tasks/
+/AGENTS.md
+/CLAUDE.md
+/cliff.toml
+/renovate.json
