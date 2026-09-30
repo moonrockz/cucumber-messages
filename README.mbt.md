@@ -40,11 +40,11 @@ The protocol defines message types wrapped in an `Envelope` discriminated union:
 ## Usage
 
 ```moonbit
-// Deserialize a message from JSON (use your package alias for Envelope, e.g. @cm)
+// Deserialize a message from JSON (this example imports the package as @cm)
 let json = @json.parse(
-  "{\"meta\": {\"protocolVersion\": \"27.0.0\", \"implementation\": {\"name\": \"cucumber-moonbit\"}, \"runtime\": {\"name\": \"moonbit\"}, \"os\": {\"name\": \"linux\"}, \"cpu\": {\"name\": \"amd64\"}}}"
+  "{\"meta\": {\"protocolVersion\": \"34.2.1\", \"implementation\": {\"name\": \"cucumber-moonbit\"}, \"runtime\": {\"name\": \"moonbit\"}, \"os\": {\"name\": \"linux\"}, \"cpu\": {\"name\": \"amd64\"}}}"
 ) catch { _ => panic() }
-let envelope : Envelope = @json.from_json(json) catch { _ => panic() }
+let envelope : @cm.Envelope = @json.from_json(json) catch { _ => panic() }
 
 // Serialize a message to JSON
 let json_value = envelope.to_json()
