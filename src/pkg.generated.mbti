@@ -189,8 +189,9 @@ pub struct Group {
   children : Array[Group]?
   start : Int?
   value : String?
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn Group::to_json(Self) -> Json
+pub impl @json.FromJson for Group
 
 pub struct Hook {
   id : String
@@ -243,8 +244,9 @@ pub impl @json.FromJson for KeywordType
 pub struct Location {
   line : Int
   column : Int?
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn Location::to_json(Self) -> Json
+pub impl @json.FromJson for Location
 
 pub struct Meta {
   protocolVersion : String
@@ -263,8 +265,9 @@ pub struct ParameterType {
   regularExpressions : Array[String]
   useForSnippets : Bool
   sourceReference : SourceReference?
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn ParameterType::to_json(Self) -> Json
+pub impl @json.FromJson for ParameterType
 
 pub struct ParseError {
   source : SourceReference
@@ -281,8 +284,9 @@ pub(all) struct Pickle {
   tags : Array[PickleTag]
   astNodeIds : Array[String]
   location : Location?
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn Pickle::to_json(Self) -> Json
+pub impl @json.FromJson for Pickle
 
 pub(all) struct PickleDocString {
   argumentIndex : Int?
@@ -333,8 +337,9 @@ pub fn PickleTableCell::to_json(Self) -> Json
 
 pub(all) struct PickleTableRow {
   cells : Array[PickleTableCell]
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn PickleTableRow::to_json(Self) -> Json
+pub impl @json.FromJson for PickleTableRow
 
 pub(all) struct PickleTag {
   name : String
@@ -455,8 +460,9 @@ pub struct Suggestion {
   id : String
   pickleStepId : String
   snippets : Array[Snippet]
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn Suggestion::to_json(Self) -> Json
+pub impl @json.FromJson for Suggestion
 
 pub struct TableCell {
   location : Location
@@ -499,8 +505,9 @@ pub struct TestCaseStarted {
   testCaseId : String
   workerId : String?
   timestamp : Timestamp
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn TestCaseStarted::to_json(Self) -> Json
+pub impl @json.FromJson for TestCaseStarted
 
 pub struct TestRunFinished {
   message : String?

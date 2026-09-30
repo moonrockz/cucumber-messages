@@ -4,7 +4,17 @@ pub struct Group {
   children : Array[Group]?
   start : Int?
   value : String?
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for Group with fn from_json(json, path) {
+  let obj = expect_object(json, path, "Group")
+  Group::{
+    children: optional_field(obj, "children", path),
+    start: optional_int_field_min(obj, "start", path, min=0),
+    value: optional_field(obj, "value", path),
+  }
+}
 
 ///|
 /// StepMatchArgument: argument from step matching.

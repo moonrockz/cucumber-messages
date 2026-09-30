@@ -8,7 +8,13 @@ pub(all) struct PickleTableCell {
 /// PickleTableRow: a row in a pickle data table.
 pub(all) struct PickleTableRow {
   cells : Array[PickleTableCell]
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for PickleTableRow with fn from_json(json, path) {
+  let obj = expect_object(json, path, "PickleTableRow")
+  PickleTableRow::{ cells: non_empty_array_field(obj, "cells", path), }
+}
 
 ///|
 /// PickleTable: a data table in a pickle step.
@@ -127,13 +133,9 @@ pub impl @json.FromJson for PickleStep with fn from_json(json, path) {
     None =>
       raise @json.JsonDecodeError((path, "PickleStep::from_json: missing text"))
   }
-  let astNodeIds : Array[String] = match obj.get("astNodeIds") {
-    Some(v) => @json.from_json(v, path=path.add_key("astNodeIds"))
-    None =>
-      raise @json.JsonDecodeError(
-        (path, "PickleStep::from_json: missing astNodeIds"),
-      )
-  }
+  let astNodeIds : Array[String] = non_empty_array_field(
+    obj, "astNodeIds", path,
+  )
   let type_ : PickleStepType? = match obj.get("type") {
     Some(Null) | None => None
     Some(v) => Some(@json.from_json(v, path=path.add_key("type")))
@@ -181,7 +183,22 @@ pub(all) struct Pickle {
   tags : Array[PickleTag]
   astNodeIds : Array[String]
   location : Location?
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for Pickle with fn from_json(json, path) {
+  let obj = expect_object(json, path, "Pickle")
+  Pickle::{
+    id: required_field(obj, "id", path),
+    uri: required_field(obj, "uri", path),
+    name: required_field(obj, "name", path),
+    language: required_field(obj, "language", path),
+    steps: required_field(obj, "steps", path),
+    tags: required_field(obj, "tags", path),
+    astNodeIds: non_empty_array_field(obj, "astNodeIds", path),
+    location: optional_field(obj, "location", path),
+  }
+}
 
 ///|
 test "pickle step type roundtrip" {

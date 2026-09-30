@@ -93,7 +93,22 @@ pub struct ParameterType {
   regularExpressions : Array[String]
   useForSnippets : Bool
   sourceReference : SourceReference?
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for ParameterType with fn from_json(json, path) {
+  let obj = expect_object(json, path, "ParameterType")
+  ParameterType::{
+    id: required_field(obj, "id", path),
+    name: required_field(obj, "name", path),
+    preferForRegularExpressionMatch: required_field(
+      obj, "preferForRegularExpressionMatch", path,
+    ),
+    regularExpressions: non_empty_array_field(obj, "regularExpressions", path),
+    useForSnippets: required_field(obj, "useForSnippets", path),
+    sourceReference: optional_field(obj, "sourceReference", path),
+  }
+}
 
 ///|
 /// Snippet: code snippet for a suggestion.
@@ -108,7 +123,17 @@ pub struct Suggestion {
   id : String
   pickleStepId : String
   snippets : Array[Snippet]
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for Suggestion with fn from_json(json, path) {
+  let obj = expect_object(json, path, "Suggestion")
+  Suggestion::{
+    id: required_field(obj, "id", path),
+    pickleStepId: required_field(obj, "pickleStepId", path),
+    snippets: non_empty_array_field(obj, "snippets", path),
+  }
+}
 
 ///|
 test "step definition pattern type roundtrip" {

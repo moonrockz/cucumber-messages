@@ -3,7 +3,16 @@
 pub struct Location {
   line : Int
   column : Int?
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for Location with fn from_json(json, path) {
+  let obj = expect_object(json, path, "Location")
+  Location::{
+    line: int_field_min(obj, "line", path, min=1),
+    column: optional_int_field_min(obj, "column", path, min=1),
+  }
+}
 
 ///|
 /// Timestamp: seconds since Unix epoch + nanos (0..999_999_999).
