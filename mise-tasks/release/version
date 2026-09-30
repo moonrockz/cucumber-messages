@@ -2,7 +2,14 @@
 #MISE description="Determine next release version from conventional commits"
 set -euo pipefail
 
-BASE_VERSION=$(git cliff --bumped-version 2>/dev/null || echo "0.1.0")
+# Before the first tag, start from the configured initial version.
+# Otherwise git-cliff must succeed: a silent fallback here once released
+# under the wrong version.
+if git describe --tags --abbrev=0 &>/dev/null; then
+  BASE_VERSION=$(git cliff --bumped-version)
+else
+  BASE_VERSION="0.1.0"
+fi
 BASE_VERSION="${BASE_VERSION#v}"
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#MISE description="Fail unless the given release version matches moon.mod"
+#USAGE arg "<version>" help="Release version to check, without a leading v"
+set -euo pipefail
+
+EXPECTED="${usage_version:-${1:-}}"
+EXPECTED="${EXPECTED#v}"
+MOD_VERSION=$(sed -nE 's/^version[[:space:]]*=[[:space:]]*"([^"]*)".*/\1/p' moon.mod | head -1)
+
+if [ -z "$EXPECTED" ] || [ "$EXPECTED" != "$MOD_VERSION" ]; then
+  echo "::error::Release version '${EXPECTED}' does not match moon.mod version '${MOD_VERSION}'. Run 'mise run release:bump' and commit before releasing." >&2
+  exit 1
+fi
+echo "Release version ${EXPECTED} matches moon.mod"
