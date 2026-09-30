@@ -30,6 +30,10 @@ fn seconds_from_json(
   guard json is Number(n, ..) && n == n.floor() else {
     raise @json.JsonDecodeError((path, "seconds: expected an integer number"))
   }
+  // 2^63: the smallest Double above Int64 max; -2^63 is Int64 min.
+  guard n >= -9223372036854775808.0 && n < 9223372036854775808.0 else {
+    raise @json.JsonDecodeError((path, "seconds: out of Int64 range"))
+  }
   n.to_int64()
 }
 
@@ -181,4 +185,21 @@ test "timestamp rejects fractional seconds" {
   let json = @json.parse("{\"seconds\":1.5,\"nanos\":0}")
   let ts : Timestamp? = Some(@json.from_json(json)) catch { _ => None }
   assert_true(ts is None)
+}
+
+///|
+test "seconds outside the Int64 range are rejected" {
+  for
+    raw in [
+      "{\"seconds\":1e300,\"nanos\":0}", "{\"seconds\":-1e300,\"nanos\":0}", "{\"seconds\":9223372036854775808,\"nanos\":0}",
+    ] {
+    let ts : Timestamp? = Some(@json.from_json(@json.parse(raw))) catch {
+      _ => None
+    }
+    assert_true(ts is None, msg="accepted \{raw}")
+    let d : Duration? = Some(@json.from_json(@json.parse(raw))) catch {
+      _ => None
+    }
+    assert_true(d is None, msg="accepted \{raw}")
+  }
 }
