@@ -91,6 +91,50 @@ let envelope = reader.read_line(line) catch { _ => None }
 envelope.write_ndjson(out)
 ```
 
+### With async I/O
+
+The library does no I/O, so it works with any I/O model. With
+[moonbitlang/async](https://mooncakes.io/docs/moonbitlang/async) (native
+targets only), read lines asynchronously and give each one to
+`NdjsonReader::read_line`:
+
+```moonbit
+// moon.pkg imports: moonbitlang/async, moonbitlang/async/fs,
+// moonbitlang/async/io, moonbitlang/async/stdio,
+// "moonrockz/cucumber-messages" @cm
+
+///|
+/// Read NDJSON envelopes from any async reader, one line at a time.
+async fn read_envelopes(
+  input : &@io.Reader,
+  handle : async (@cm.Envelope) -> Unit,
+) -> Unit {
+  let reader = @cm.NdjsonReader::new()
+  while input.read_until("\n") is Some(line) {
+    if reader.read_line(line) is Some(envelope) {
+      handle(envelope)
+    }
+  }
+}
+
+///|
+/// Write one envelope as an NDJSON line to any async writer.
+async fn write_envelope(output : &@io.Writer, envelope : @cm.Envelope) -> Unit {
+  output.write(envelope.to_ndjson_line() + "\n")
+}
+
+///|
+async fn main {
+  let file = @fs.open("messages.ndjson", mode=ReadOnly)
+  defer file.close()
+  read_envelopes(file, async fn(envelope) {
+    if envelope is TestStepFinished(_) {
+      write_envelope(@stdio.stdout, envelope)
+    }
+  })
+}
+```
+
 ## Parsing rules
 
 - **Unknown message types** (for example a message added by a newer protocol
