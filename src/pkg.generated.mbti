@@ -79,10 +79,12 @@ pub struct DocString {
 pub fn DocString::to_json(Self) -> Json
 
 pub struct Duration {
-  seconds : Int
+  seconds : Int64
   nanos : Int
-} derive(ToJson, @json.FromJson)
+}
 pub fn Duration::to_json(Self) -> Json
+pub impl ToJson for Duration
+pub impl @json.FromJson for Duration
 
 pub enum Envelope {
   Meta(Meta)
@@ -566,10 +568,12 @@ pub struct TestStepStarted {
 pub fn TestStepStarted::to_json(Self) -> Json
 
 pub struct Timestamp {
-  seconds : Int
+  seconds : Int64
   nanos : Int
-} derive(ToJson, @json.FromJson)
+}
 pub fn Timestamp::to_json(Self) -> Json
+pub impl ToJson for Timestamp
+pub impl @json.FromJson for Timestamp
 
 pub struct UndefinedParameterType {
   expression : String
