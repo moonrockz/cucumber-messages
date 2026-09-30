@@ -287,8 +287,9 @@ pub(all) struct PickleDocString {
   argumentIndex : Int?
   mediaType : String?
   content : String
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn PickleDocString::to_json(Self) -> Json
+pub impl @json.FromJson for PickleDocString
 
 pub(all) struct PickleStep {
   id : String
@@ -320,8 +321,9 @@ pub impl @json.FromJson for PickleStepType
 pub(all) struct PickleTable {
   argumentIndex : Int?
   rows : Array[PickleTableRow]
-} derive(ToJson, @json.FromJson)
+} derive(ToJson)
 pub fn PickleTable::to_json(Self) -> Json
+pub impl @json.FromJson for PickleTable
 
 pub(all) struct PickleTableCell {
   value : String

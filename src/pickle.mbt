@@ -16,7 +16,20 @@ pub(all) struct PickleTable {
   /// 1 if declared before the doc string, 2 if declared after.
   argumentIndex : Int?
   rows : Array[PickleTableRow]
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for PickleTable with fn from_json(json, path) {
+  guard json is Object(obj) else {
+    raise @json.JsonDecodeError(
+      (path, "PickleTable::from_json: expected object"),
+    )
+  }
+  PickleTable::{
+    argumentIndex: argument_index_field(obj, path),
+    rows: required_field(obj, "rows", path),
+  }
+}
 
 ///|
 /// PickleDocString: a doc string in a pickle step.
@@ -25,7 +38,21 @@ pub(all) struct PickleDocString {
   argumentIndex : Int?
   mediaType : String?
   content : String
-} derive(ToJson, FromJson)
+} derive(ToJson)
+
+///|
+pub impl @json.FromJson for PickleDocString with fn from_json(json, path) {
+  guard json is Object(obj) else {
+    raise @json.JsonDecodeError(
+      (path, "PickleDocString::from_json: expected object"),
+    )
+  }
+  PickleDocString::{
+    argumentIndex: argument_index_field(obj, path),
+    mediaType: optional_field(obj, "mediaType", path),
+    content: required_field(obj, "content", path),
+  }
+}
 
 ///|
 /// PickleStepArgument: argument for a pickle step.
@@ -189,4 +216,35 @@ test "pickle step argument keeps argumentIndex" {
   assert_eq(arg.docString.map(d => d.argumentIndex), Some(Some(2)))
   assert_eq(arg.dataTable.map(t => t.argumentIndex), Some(Some(1)))
   assert_eq(arg.to_json(), @json.parse(raw))
+}
+
+///|
+test "argumentIndex outside 1..2 is rejected" {
+  for
+    raw in [
+      "{\"argumentIndex\":0,\"rows\":[]}", "{\"argumentIndex\":3,\"rows\":[]}",
+    ] {
+    let t : PickleTable? = Some(@json.from_json(@json.parse(raw))) catch {
+      _ => None
+    }
+    assert_true(t is None, msg="accepted \{raw}")
+  }
+  for
+    raw in [
+      "{\"argumentIndex\":0,\"content\":\"c\"}", "{\"argumentIndex\":3,\"content\":\"c\"}",
+    ] {
+    let d : PickleDocString? = Some(@json.from_json(@json.parse(raw))) catch {
+      _ => None
+    }
+    assert_true(d is None, msg="accepted \{raw}")
+  }
+  let t : PickleTable = @json.from_json(@json.parse("{\"rows\":[]}"))
+  assert_eq(t.argumentIndex, None)
+  let d : PickleDocString = @json.from_json(
+    @json.parse(
+      "{\"argumentIndex\":2,\"mediaType\":\"text/plain\",\"content\":\"c\"}",
+    ),
+  )
+  assert_eq(d.argumentIndex, Some(2))
+  assert_eq(d.mediaType, Some("text/plain"))
 }
