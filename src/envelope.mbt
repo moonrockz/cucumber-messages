@@ -29,96 +29,63 @@ pub impl @json.FromJson for Envelope with fn from_json(json, path) {
   guard normalize_envelope_json(json, path) is Object(obj) else {
     raise @json.JsonDecodeError((path, "Envelope::from_json: expected object"))
   }
-  if obj.get("meta") is Some(v) {
-    return Meta(@json.from_json(v, path=path.add_key("meta")))
+  let mut found : (String, Envelope)? = None
+  for key, value in obj {
+    guard decode_message(key, value, path.add_key(key)) is Some(envelope) else {
+      continue
+    }
+    if found is Some((first, _)) {
+      raise @json.JsonDecodeError(
+        (
+          path,
+          "Envelope::from_json: more than one message key: \{first}, \{key}",
+        ),
+      )
+    }
+    found = Some((key, envelope))
   }
-  if obj.get("source") is Some(v) {
-    return Source(@json.from_json(v, path=path.add_key("source")))
-  }
-  if obj.get("parseError") is Some(v) {
-    return ParseError(@json.from_json(v, path=path.add_key("parseError")))
-  }
-  if obj.get("testRunStarted") is Some(v) {
-    return TestRunStarted(
-      @json.from_json(v, path=path.add_key("testRunStarted")),
+  guard found is Some((_, envelope)) else {
+    raise @json.JsonDecodeError(
+      (path, "Envelope::from_json: no known message key found"),
     )
   }
-  if obj.get("testRunFinished") is Some(v) {
-    return TestRunFinished(
-      @json.from_json(v, path=path.add_key("testRunFinished")),
-    )
+  envelope
+}
+
+///|
+/// Decode the message stored under `key`, or `None` when `key` is not a
+/// known message type.
+fn decode_message(
+  key : String,
+  value : Json,
+  path : @json.JsonPath,
+) -> Envelope? raise @json.JsonDecodeError {
+  let envelope = match key {
+    "meta" => Meta(@json.from_json(value, path~))
+    "source" => Source(@json.from_json(value, path~))
+    "parseError" => ParseError(@json.from_json(value, path~))
+    "testRunStarted" => TestRunStarted(@json.from_json(value, path~))
+    "testRunFinished" => TestRunFinished(@json.from_json(value, path~))
+    "undefinedParameterType" =>
+      UndefinedParameterType(@json.from_json(value, path~))
+    "testCaseStarted" => TestCaseStarted(@json.from_json(value, path~))
+    "testCaseFinished" => TestCaseFinished(@json.from_json(value, path~))
+    "testStepStarted" => TestStepStarted(@json.from_json(value, path~))
+    "testStepFinished" => TestStepFinished(@json.from_json(value, path~))
+    "attachment" => Attachment(@json.from_json(value, path~))
+    "externalAttachment" => ExternalAttachment(@json.from_json(value, path~))
+    "hook" => Hook(@json.from_json(value, path~))
+    "stepDefinition" => StepDefinition(@json.from_json(value, path~))
+    "parameterType" => ParameterType(@json.from_json(value, path~))
+    "suggestion" => Suggestion(@json.from_json(value, path~))
+    "testRunHookStarted" => TestRunHookStarted(@json.from_json(value, path~))
+    "testRunHookFinished" => TestRunHookFinished(@json.from_json(value, path~))
+    "gherkinDocument" => GherkinDocument(@json.from_json(value, path~))
+    "pickle" => Pickle(@json.from_json(value, path~))
+    "testCase" => TestCase(@json.from_json(value, path~))
+    _ => return None
   }
-  if obj.get("undefinedParameterType") is Some(v) {
-    return UndefinedParameterType(
-      @json.from_json(v, path=path.add_key("undefinedParameterType")),
-    )
-  }
-  if obj.get("testCaseStarted") is Some(v) {
-    return TestCaseStarted(
-      @json.from_json(v, path=path.add_key("testCaseStarted")),
-    )
-  }
-  if obj.get("testCaseFinished") is Some(v) {
-    return TestCaseFinished(
-      @json.from_json(v, path=path.add_key("testCaseFinished")),
-    )
-  }
-  if obj.get("testStepStarted") is Some(v) {
-    return TestStepStarted(
-      @json.from_json(v, path=path.add_key("testStepStarted")),
-    )
-  }
-  if obj.get("testStepFinished") is Some(v) {
-    return TestStepFinished(
-      @json.from_json(v, path=path.add_key("testStepFinished")),
-    )
-  }
-  if obj.get("attachment") is Some(v) {
-    return Attachment(@json.from_json(v, path=path.add_key("attachment")))
-  }
-  if obj.get("externalAttachment") is Some(v) {
-    return ExternalAttachment(
-      @json.from_json(v, path=path.add_key("externalAttachment")),
-    )
-  }
-  if obj.get("hook") is Some(v) {
-    return Hook(@json.from_json(v, path=path.add_key("hook")))
-  }
-  if obj.get("stepDefinition") is Some(v) {
-    return StepDefinition(
-      @json.from_json(v, path=path.add_key("stepDefinition")),
-    )
-  }
-  if obj.get("parameterType") is Some(v) {
-    return ParameterType(@json.from_json(v, path=path.add_key("parameterType")))
-  }
-  if obj.get("suggestion") is Some(v) {
-    return Suggestion(@json.from_json(v, path=path.add_key("suggestion")))
-  }
-  if obj.get("testRunHookStarted") is Some(v) {
-    return TestRunHookStarted(
-      @json.from_json(v, path=path.add_key("testRunHookStarted")),
-    )
-  }
-  if obj.get("testRunHookFinished") is Some(v) {
-    return TestRunHookFinished(
-      @json.from_json(v, path=path.add_key("testRunHookFinished")),
-    )
-  }
-  if obj.get("gherkinDocument") is Some(v) {
-    return GherkinDocument(
-      @json.from_json(v, path=path.add_key("gherkinDocument")),
-    )
-  }
-  if obj.get("pickle") is Some(v) {
-    return Pickle(@json.from_json(v, path=path.add_key("pickle")))
-  }
-  if obj.get("testCase") is Some(v) {
-    return TestCase(@json.from_json(v, path=path.add_key("testCase")))
-  }
-  raise @json.JsonDecodeError(
-    (path, "Envelope::from_json: no known message key found"),
-  )
+  Some(envelope)
 }
 
 ///|
@@ -419,4 +386,16 @@ test "envelope rejects fractional numbers" {
       msg="\{raw}: \{message}",
     )
   }
+}
+
+///|
+test "envelope with two message keys is rejected" {
+  let raw =
+    #|{"testRunStarted":{"timestamp":{"seconds":1,"nanos":0}},"testRunFinished":{"success":true,"timestamp":{"seconds":1,"nanos":0}}}
+  let message = try parse_ndjson_line(raw) catch {
+    e => e.to_string()
+  } noraise {
+    _ => "no error"
+  }
+  assert_true(message.contains("more than one message"), msg=message)
 }
