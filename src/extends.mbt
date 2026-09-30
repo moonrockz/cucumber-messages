@@ -204,6 +204,9 @@ pub extend Timestamp with ToJson::{to_json}
 ///|
 pub extend UndefinedParameterType with ToJson::{to_json}
 
+///|
+pub extend NdjsonParseError with Show::{output, to_string}
+
 // --- compatibility: kept only for migration ---
 
 ///|

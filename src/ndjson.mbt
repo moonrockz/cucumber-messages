@@ -12,15 +12,33 @@ pub fn Envelope::to_ndjson_line(self : Envelope) -> String {
 }
 
 ///|
+/// Error raised by `parse_ndjson` when one line of the input is not a valid
+/// envelope. `line` is the 1-based line number in the input.
+pub suberror NdjsonParseError {
+  NdjsonParseError(line~ : Int, cause~ : Error)
+}
+
+///|
+pub impl Show for NdjsonParseError with fn output(self, logger) {
+  let NdjsonParseError(line~, cause~) = self
+  logger.write_string("NDJSON line \{line}: \{cause}")
+}
+
+///|
 /// Parse an NDJSON string (multiple lines) into an array of Envelopes.
-/// Blank lines are skipped.
-pub fn parse_ndjson(input : String) -> Array[Envelope] raise {
+/// Blank lines are skipped. A bad line raises `NdjsonParseError`.
+pub fn parse_ndjson(input : String) -> Array[Envelope] raise NdjsonParseError {
   let envelopes : Array[Envelope] = []
-  let lines = input.split("\n")
-  for line in lines {
+  let mut line_number = 0
+  for line in input.split("\n") {
+    line_number += 1
     let trimmed = line.trim().to_owned()
     if trimmed.length() > 0 {
-      envelopes.push(parse_ndjson_line(trimmed))
+      envelopes.push(
+        parse_ndjson_line(trimmed) catch {
+          cause => raise NdjsonParseError(line=line_number, cause~)
+        },
+      )
     }
   }
   envelopes
@@ -205,4 +223,28 @@ test "fixture all_variants ndjson roundtrip" {
     UndefinedParameterType(u) => assert_eq(u.name, "color")
     _ => panic()
   }
+}
+
+///|
+test "parse_ndjson reports the line number of a bad line" {
+  let input =
+    #|{"testRunStarted":{"timestamp":{"seconds":1,"nanos":0}}}
+    #|
+    #|{bad}
+  let message = try parse_ndjson(input) catch {
+    NdjsonParseError(line~, ..) => "line \{line}"
+  } noraise {
+    _ => "no error"
+  }
+  assert_eq(message, "line 3")
+}
+
+///|
+test "NdjsonParseError message names the line" {
+  let message = try parse_ndjson("\n{bad}") catch {
+    e => e.to_string()
+  } noraise {
+    _ => "no error"
+  }
+  assert_true(message.has_prefix("NDJSON line 2: "))
 }

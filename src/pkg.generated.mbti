@@ -8,13 +8,19 @@ import {
 // Values
 pub fn envelopes_to_ndjson(Array[Envelope]) -> String
 
-pub fn parse_ndjson(String) -> Array[Envelope] raise
+pub fn parse_ndjson(String) -> Array[Envelope] raise NdjsonParseError
 
 pub fn parse_ndjson_line(String) -> Envelope raise
 
 pub let protocol_version : String
 
 // Errors
+pub suberror NdjsonParseError {
+  NdjsonParseError(line~ : Int, cause~ : Error)
+}
+pub fn NdjsonParseError::output(Self, &Logger) -> Unit
+pub fn NdjsonParseError::to_string(Self) -> String
+pub impl Show for NdjsonParseError
 
 // Types and methods
 pub struct Attachment {
