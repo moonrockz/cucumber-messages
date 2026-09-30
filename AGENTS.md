@@ -274,6 +274,7 @@ Run `mise tasks` to list all tasks. Key tasks:
 | `release:changelog`     | Generate CHANGELOG.md                             |
 | `release:notes`         | Generate release notes for latest version         |
 | `release:bump`          | Update moon.mod version                           |
+| `release:check-version` | Fail unless a version matches moon.mod            |
 | `release:pre-check`     | Validate release readiness                        |
 | `release:credentials`   | Set up mooncakes.io credentials (CI only)         |
 | `release:publish`       | Publish package to mooncakes.io                   |

@@ -62,6 +62,9 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
 
+      - name: Check version matches moon.mod
+        run: mise run release:check-version "${{ steps.version.outputs.version }}"
+
       - name: Check if tag already exists
         id: check_tag
         run: |
@@ -74,7 +77,7 @@ jobs:
       - name: Generate release notes
         id: notes
         run: |
-          NOTES=$(mise run release:notes 2>/dev/null || echo "Release ${{ steps.version.outputs.version }}")
+          NOTES=$(mise run release:notes)
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "notes<<$EOF" >> "$GITHUB_OUTPUT"
           echo "$NOTES" >> "$GITHUB_OUTPUT"
