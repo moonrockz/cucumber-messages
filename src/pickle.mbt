@@ -20,7 +20,7 @@ pub impl @json.FromJson for PickleTableRow with fn from_json(json, path) {
 /// PickleTable: a data table in a pickle step.
 pub(all) struct PickleTable {
   /// 1 if declared before the doc string, 2 if declared after.
-  argumentIndex : Int?
+  argumentIndex : Int32?
   rows : Array[PickleTableRow]
 } derive(ToJson)
 
@@ -41,7 +41,7 @@ pub impl @json.FromJson for PickleTable with fn from_json(json, path) {
 /// PickleDocString: a doc string in a pickle step.
 pub(all) struct PickleDocString {
   /// 1 if declared before the data table, 2 if declared after.
-  argumentIndex : Int?
+  argumentIndex : Int32?
   mediaType : String?
   content : String
 } derive(ToJson)
@@ -98,10 +98,10 @@ pub impl @json.FromJson for PickleStepType with fn from_json(json, path) {
 ///|
 pub impl ToJson for PickleStepType with fn to_json(self) {
   match self {
-    Unknown => "Unknown".to_json()
-    Context => "Context".to_json()
-    Action => "Action".to_json()
-    Outcome => "Outcome".to_json()
+    Unknown => Json("Unknown")
+    Context => Json("Context")
+    Action => Json("Action")
+    Outcome => Json("Outcome")
   }
 }
 
@@ -150,9 +150,9 @@ pub impl @json.FromJson for PickleStep with fn from_json(json, path) {
 ///|
 pub impl ToJson for PickleStep with fn to_json(self) {
   let o : Map[String, Json] = {
-    "id": self.id.to_json(),
-    "text": self.text.to_json(),
-    "astNodeIds": self.astNodeIds.to_json(),
+    "id": Json(self.id),
+    "text": Json(self.text),
+    "astNodeIds": Json(self.astNodeIds),
   }
   match self.type_ {
     Some(t) => o.set("type", t.to_json())
@@ -162,7 +162,7 @@ pub impl ToJson for PickleStep with fn to_json(self) {
     Some(a) => o.set("argument", a.to_json())
     None => ()
   }
-  o.to_json()
+  Json(o)
 }
 
 ///|

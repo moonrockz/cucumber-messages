@@ -3,7 +3,7 @@
 /// `read_line`, or in chunks of any size with `feed`; it keeps track of
 /// line numbers so errors name the bad line.
 pub struct NdjsonReader {
-  priv mut line_number : Int
+  priv mut line_number : Int32
   priv mut pending : String
 }
 
@@ -15,7 +15,7 @@ pub fn NdjsonReader::new() -> NdjsonReader {
 
 ///|
 /// Number of lines read so far.
-pub fn NdjsonReader::line_number(self : NdjsonReader) -> Int {
+pub fn NdjsonReader::line_number(self : NdjsonReader) -> Int32 {
   self.line_number
 }
 

@@ -31,12 +31,12 @@ pub impl @json.FromJson for HookType with fn from_json(json, path) {
 ///|
 pub impl ToJson for HookType with fn to_json(self) {
   match self {
-    BeforeTestRun => "BEFORE_TEST_RUN".to_json()
-    AfterTestRun => "AFTER_TEST_RUN".to_json()
-    BeforeTestCase => "BEFORE_TEST_CASE".to_json()
-    AfterTestCase => "AFTER_TEST_CASE".to_json()
-    BeforeTestStep => "BEFORE_TEST_STEP".to_json()
-    AfterTestStep => "AFTER_TEST_STEP".to_json()
+    BeforeTestRun => Json("BEFORE_TEST_RUN")
+    AfterTestRun => Json("AFTER_TEST_RUN")
+    BeforeTestCase => Json("BEFORE_TEST_CASE")
+    AfterTestCase => Json("AFTER_TEST_CASE")
+    BeforeTestStep => Json("BEFORE_TEST_STEP")
+    AfterTestStep => Json("AFTER_TEST_STEP")
   }
 }
 
@@ -85,22 +85,22 @@ pub impl @json.FromJson for Hook with fn from_json(json, path) {
 ///|
 pub impl ToJson for Hook with fn to_json(self) {
   let o : Map[String, Json] = {
-    "id": self.id.to_json(),
+    "id": Json(self.id),
     "sourceReference": self.sourceReference.to_json(),
   }
   match self.name {
-    Some(n) => o.set("name", n.to_json())
+    Some(n) => o.set("name", Json(n))
     None => ()
   }
   match self.tagExpression {
-    Some(te) => o.set("tagExpression", te.to_json())
+    Some(te) => o.set("tagExpression", Json(te))
     None => ()
   }
   match self.type_ {
     Some(t) => o.set("type", t.to_json())
     None => ()
   }
-  o.to_json()
+  Json(o)
 }
 
 ///|

@@ -2,7 +2,7 @@
 /// Group: capture group from step matching.
 pub struct Group {
   children : Array[Group]?
-  start : Int?
+  start : Int32?
   value : String?
 } derive(ToJson)
 

@@ -18,7 +18,7 @@ pub struct TestRunFinished {
 ///|
 /// TestCaseStarted: test case attempt started.
 pub struct TestCaseStarted {
-  attempt : Int
+  attempt : Int32
   id : String
   testCaseId : String
   workerId : String?

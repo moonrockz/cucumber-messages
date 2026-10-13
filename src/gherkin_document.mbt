@@ -77,11 +77,11 @@ pub impl @json.FromJson for KeywordType with fn from_json(json, path) {
 ///|
 pub impl ToJson for KeywordType with fn to_json(self) {
   match self {
-    Unknown => "Unknown".to_json()
-    Context => "Context".to_json()
-    Action => "Action".to_json()
-    Outcome => "Outcome".to_json()
-    Conjunction => "Conjunction".to_json()
+    Unknown => Json("Unknown")
+    Context => Json("Context")
+    Action => Json("Action")
+    Outcome => Json("Outcome")
+    Conjunction => Json("Conjunction")
   }
 }
 

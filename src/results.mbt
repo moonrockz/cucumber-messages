@@ -37,13 +37,13 @@ pub impl @json.FromJson for TestStepResultStatus with fn from_json(json, path) {
 ///|
 pub impl ToJson for TestStepResultStatus with fn to_json(self) {
   match self {
-    Unknown => "UNKNOWN".to_json()
-    Passed => "PASSED".to_json()
-    Skipped => "SKIPPED".to_json()
-    Pending => "PENDING".to_json()
-    Undefined => "UNDEFINED".to_json()
-    Ambiguous => "AMBIGUOUS".to_json()
-    Failed => "FAILED".to_json()
+    Unknown => Json("UNKNOWN")
+    Passed => Json("PASSED")
+    Skipped => Json("SKIPPED")
+    Pending => Json("PENDING")
+    Undefined => Json("UNDEFINED")
+    Ambiguous => Json("AMBIGUOUS")
+    Failed => Json("FAILED")
   }
 }
 
