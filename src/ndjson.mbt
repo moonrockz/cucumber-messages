@@ -15,7 +15,7 @@ pub fn Envelope::to_ndjson_line(self : Envelope) -> String {
 /// Error raised by `parse_ndjson` when one line of the input is not a valid
 /// envelope. `line` is the 1-based line number in the input.
 pub suberror NdjsonParseError {
-  NdjsonParseError(line~ : Int, cause~ : Error)
+  NdjsonParseError(line~ : Int32, cause~ : Error)
 }
 
 ///|

@@ -129,7 +129,7 @@ pub impl ToJson for Envelope with fn to_json(self) {
     TestCase(t) => { "testCase": t.to_json() }
     UnknownMessage(key, value) => Map::from_array([(key, value)])
   }
-  o.to_json()
+  Json(o)
 }
 
 ///|

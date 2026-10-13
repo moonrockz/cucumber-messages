@@ -1,10 +1,10 @@
 ///|
 /// Raise a decode error when `value` is outside `min..=max`.
 fn check_int_range(
-  value : Int,
+  value : Int32,
   path : @json.JsonPath,
-  min~ : Int,
-  max~ : Int,
+  min~ : Int32,
+  max~ : Int32,
 ) -> Unit raise @json.JsonDecodeError {
   guard value >= min && value <= max else {
     raise @json.JsonDecodeError(
@@ -16,9 +16,9 @@ fn check_int_range(
 ///|
 /// Raise a decode error when `value` is below `min`.
 fn check_int_min(
-  value : Int,
+  value : Int32,
   path : @json.JsonPath,
-  min~ : Int,
+  min~ : Int32,
 ) -> Unit raise @json.JsonDecodeError {
   guard value >= min else {
     raise @json.JsonDecodeError(
@@ -49,9 +49,9 @@ fn int_field_min(
   obj : Map[String, Json],
   key : String,
   path : @json.JsonPath,
-  min~ : Int,
-) -> Int raise @json.JsonDecodeError {
-  let value : Int = required_field(obj, key, path)
+  min~ : Int32,
+) -> Int32 raise @json.JsonDecodeError {
+  let value : Int32 = required_field(obj, key, path)
   check_int_min(value, path.add_key(key), min~)
   value
 }
@@ -62,9 +62,9 @@ fn optional_int_field_min(
   obj : Map[String, Json],
   key : String,
   path : @json.JsonPath,
-  min~ : Int,
-) -> Int? raise @json.JsonDecodeError {
-  let value : Int? = optional_field(obj, key, path)
+  min~ : Int32,
+) -> Int32? raise @json.JsonDecodeError {
+  let value : Int32? = optional_field(obj, key, path)
   if value is Some(v) {
     check_int_min(v, path.add_key(key), min~)
   }
@@ -117,8 +117,8 @@ fn[T : @json.FromJson] optional_field(
 fn argument_index_field(
   obj : Map[String, Json],
   path : @json.JsonPath,
-) -> Int? raise @json.JsonDecodeError {
-  let index : Int? = optional_field(obj, "argumentIndex", path)
+) -> Int32? raise @json.JsonDecodeError {
+  let index : Int32? = optional_field(obj, "argumentIndex", path)
   if index is Some(i) {
     check_int_range(i, path.add_key("argumentIndex"), min=1, max=2)
   }

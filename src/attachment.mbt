@@ -30,8 +30,8 @@ pub impl @json.FromJson for AttachmentContentEncoding with fn from_json(
 ///|
 pub impl ToJson for AttachmentContentEncoding with fn to_json(self) {
   match self {
-    Identity => "IDENTITY".to_json()
-    Base64 => "BASE64".to_json()
+    Identity => Json("IDENTITY")
+    Base64 => Json("BASE64")
   }
 }
 

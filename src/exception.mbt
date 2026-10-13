@@ -29,16 +29,16 @@ pub impl @json.FromJson for Exception with fn from_json(json, path) {
 
 ///|
 pub impl ToJson for Exception with fn to_json(self) {
-  let o : Map[String, Json] = { "type": self.type_.to_json() }
+  let o : Map[String, Json] = { "type": Json(self.type_) }
   match self.message {
-    Some(m) => o.set("message", m.to_json())
+    Some(m) => o.set("message", Json(m))
     None => ()
   }
   match self.stackTrace {
-    Some(st) => o.set("stackTrace", st.to_json())
+    Some(st) => o.set("stackTrace", Json(st))
     None => ()
   }
-  o.to_json()
+  Json(o)
 }
 
 ///|

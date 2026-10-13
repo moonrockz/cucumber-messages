@@ -1,8 +1,8 @@
 ///|
 /// Location: line and optional column in a text file (Cucumber Messages).
 pub struct Location {
-  line : Int
-  column : Int?
+  line : Int32
+  column : Int32?
 } derive(ToJson)
 
 ///|
@@ -19,14 +19,14 @@ pub impl @json.FromJson for Location with fn from_json(json, path) {
 /// `seconds` is an Int64 so that dates after 2038-01-19 fit.
 pub struct Timestamp {
   seconds : Int64
-  nanos : Int
+  nanos : Int32
 }
 
 ///|
 /// Duration: seconds + nanos (0..999_999_999).
 pub struct Duration {
   seconds : Int64
-  nanos : Int
+  nanos : Int32
 }
 
 ///|
@@ -51,7 +51,7 @@ fn seconds_and_nanos_from_json(
   json : Json,
   path : @json.JsonPath,
   type_name : String,
-) -> (Int64, Int) raise @json.JsonDecodeError {
+) -> (Int64, Int32) raise @json.JsonDecodeError {
   guard json is Object(obj) else {
     raise @json.JsonDecodeError(
       (path, "\{type_name}::from_json: expected object"),
@@ -68,7 +68,7 @@ fn seconds_and_nanos_from_json(
     )
   }
   let nanos_path = path.add_key("nanos")
-  let nanos : Int = @json.from_json(n, path=nanos_path)
+  let nanos : Int32 = @json.from_json(n, path=nanos_path)
   check_int_range(nanos, nanos_path, min=0, max=999_999_999)
   (seconds_from_json(s, path.add_key("seconds")), nanos)
 }
@@ -124,8 +124,8 @@ pub impl @json.FromJson for SourceMediaType with fn from_json(json, path) {
 ///|
 pub impl ToJson for SourceMediaType with fn to_json(self) {
   match self {
-    GherkinPlain => "text/x.cucumber.gherkin+plain".to_json()
-    GherkinMarkdown => "text/x.cucumber.gherkin+markdown".to_json()
+    GherkinPlain => Json("text/x.cucumber.gherkin+plain")
+    GherkinMarkdown => Json("text/x.cucumber.gherkin+markdown")
   }
 }
 

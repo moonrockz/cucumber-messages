@@ -30,8 +30,8 @@ pub impl @json.FromJson for StepDefinitionPatternType with fn from_json(
 ///|
 pub impl ToJson for StepDefinitionPatternType with fn to_json(self) {
   match self {
-    CucumberExpression => "CUCUMBER_EXPRESSION".to_json()
-    RegularExpression => "REGULAR_EXPRESSION".to_json()
+    CucumberExpression => Json("CUCUMBER_EXPRESSION")
+    RegularExpression => Json("REGULAR_EXPRESSION")
   }
 }
 
@@ -70,10 +70,10 @@ pub impl @json.FromJson for StepDefinitionPattern with fn from_json(json, path) 
 ///|
 pub impl ToJson for StepDefinitionPattern with fn to_json(self) {
   let o : Map[String, Json] = {
-    "source": self.source.to_json(),
+    "source": Json(self.source),
     "type": self.type_.to_json(),
   }
-  o.to_json()
+  Json(o)
 }
 
 ///|
