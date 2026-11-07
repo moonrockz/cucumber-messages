@@ -1,14 +1,16 @@
 ///|
 /// PickleTableCell: a cell in a pickle data table.
+#derive(ToJson, FromJson)
 pub(all) struct PickleTableCell {
   value : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// PickleTableRow: a row in a pickle data table.
+#derive(ToJson)
 pub(all) struct PickleTableRow {
   cells : Array[PickleTableCell]
-} derive(ToJson)
+}
 
 ///|
 pub impl @json.FromJson for PickleTableRow with fn from_json(json, path) {
@@ -18,11 +20,12 @@ pub impl @json.FromJson for PickleTableRow with fn from_json(json, path) {
 
 ///|
 /// PickleTable: a data table in a pickle step.
+#derive(ToJson)
 pub(all) struct PickleTable {
   /// 1 if declared before the doc string, 2 if declared after.
   argumentIndex : Int32?
   rows : Array[PickleTableRow]
-} derive(ToJson)
+}
 
 ///|
 pub impl @json.FromJson for PickleTable with fn from_json(json, path) {
@@ -39,12 +42,13 @@ pub impl @json.FromJson for PickleTable with fn from_json(json, path) {
 
 ///|
 /// PickleDocString: a doc string in a pickle step.
+#derive(ToJson)
 pub(all) struct PickleDocString {
   /// 1 if declared before the data table, 2 if declared after.
   argumentIndex : Int32?
   mediaType : String?
   content : String
-} derive(ToJson)
+}
 
 ///|
 pub impl @json.FromJson for PickleDocString with fn from_json(json, path) {
@@ -62,10 +66,11 @@ pub impl @json.FromJson for PickleDocString with fn from_json(json, path) {
 
 ///|
 /// PickleStepArgument: argument for a pickle step.
+#derive(ToJson, FromJson)
 pub(all) struct PickleStepArgument {
   docString : PickleDocString?
   dataTable : PickleTable?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// PickleStepType: type of a pickle step.
@@ -167,13 +172,15 @@ pub impl ToJson for PickleStep with fn to_json(self) {
 
 ///|
 /// PickleTag: a tag in a pickle.
+#derive(ToJson, FromJson)
 pub(all) struct PickleTag {
   name : String
   astNodeId : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Pickle: compiled test case from a scenario.
+#derive(ToJson)
 pub(all) struct Pickle {
   id : String
   uri : String
@@ -183,7 +190,7 @@ pub(all) struct Pickle {
   tags : Array[PickleTag]
   astNodeIds : Array[String]
   location : Location?
-} derive(ToJson)
+}
 
 ///|
 pub impl @json.FromJson for Pickle with fn from_json(json, path) {

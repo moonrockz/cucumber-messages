@@ -78,14 +78,16 @@ pub impl ToJson for StepDefinitionPattern with fn to_json(self) {
 
 ///|
 /// StepDefinition: step definition with pattern and source reference.
+#derive(ToJson, FromJson)
 pub struct StepDefinition {
   id : String
   pattern : StepDefinitionPattern
   sourceReference : SourceReference
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// ParameterType: custom parameter type for step expressions.
+#derive(ToJson)
 pub struct ParameterType {
   id : String
   name : String
@@ -93,7 +95,7 @@ pub struct ParameterType {
   regularExpressions : Array[String]
   useForSnippets : Bool
   sourceReference : SourceReference?
-} derive(ToJson)
+}
 
 ///|
 pub impl @json.FromJson for ParameterType with fn from_json(json, path) {
@@ -112,18 +114,20 @@ pub impl @json.FromJson for ParameterType with fn from_json(json, path) {
 
 ///|
 /// Snippet: code snippet for a suggestion.
+#derive(ToJson, FromJson)
 pub struct Snippet {
   language : String
   code : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Suggestion: snippet suggestion for an undefined step.
+#derive(ToJson)
 pub struct Suggestion {
   id : String
   pickleStepId : String
   snippets : Array[Snippet]
-} derive(ToJson)
+}
 
 ///|
 pub impl @json.FromJson for Suggestion with fn from_json(json, path) {

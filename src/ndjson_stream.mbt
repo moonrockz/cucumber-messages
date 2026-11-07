@@ -91,9 +91,7 @@ test "NdjsonReader reads envelopes from chunks split mid-line" {
     } else {
       input.length()
     }
-    envelopes.append(
-      reader.feed(input.view(start_offset=start, end_offset=end).to_owned()),
-    )
+    envelopes.append(reader.feed(input.exact_view(start~, end~).to_owned()))
     start = end
   }
   if reader.finish() is Some(envelope) {
@@ -149,9 +147,9 @@ test "NdjsonReader handles non-BMP characters split across chunks" {
   let line = "{\"source\":{\"uri\":\"😀.feature\",\"data\":\"😀😀\",\"mediaType\":\"text/x.cucumber.gherkin+plain\"}}"
   let reader = NdjsonReader::new()
   let envelopes = reader.feed(
-    line + "\n" + line + "\n" + line.view(end_offset=20).to_owned(),
+    line + "\n" + line + "\n" + line.exact_view(end=20).to_owned(),
   )
-  envelopes.append(reader.feed(line.view(start_offset=20).to_owned() + "\n"))
+  envelopes.append(reader.feed(line.exact_view(start=20).to_owned() + "\n"))
   assert_eq(envelopes.length(), 3)
   guard! envelopes[2] is Source(s)
   assert_eq(s.data, "😀😀")

@@ -49,12 +49,13 @@ pub impl ToJson for TestStepResultStatus with fn to_json(self) {
 
 ///|
 /// TestStepResult: result of a step (duration, status, optional message and exception).
+#derive(ToJson, FromJson)
 pub struct TestStepResult {
   duration : Duration
   status : TestStepResultStatus
   message : String?
   exception : Exception?
-} derive(ToJson, FromJson)
+}
 
 ///|
 test "test step result status roundtrip all values" {

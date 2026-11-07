@@ -1,9 +1,10 @@
 ///|
 /// Location: line and optional column in a text file (Cucumber Messages).
+#derive(ToJson)
 pub struct Location {
   line : Int32
   column : Int32?
-} derive(ToJson)
+}
 
 ///|
 pub impl @json.FromJson for Location with fn from_json(json, path) {

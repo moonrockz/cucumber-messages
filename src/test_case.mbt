@@ -1,10 +1,11 @@
 ///|
 /// Group: capture group from step matching.
+#derive(ToJson)
 pub struct Group {
   children : Array[Group]?
   start : Int32?
   value : String?
-} derive(ToJson)
+}
 
 ///|
 pub impl @json.FromJson for Group with fn from_json(json, path) {
@@ -18,35 +19,39 @@ pub impl @json.FromJson for Group with fn from_json(json, path) {
 
 ///|
 /// StepMatchArgument: argument from step matching.
+#derive(ToJson, FromJson)
 pub struct StepMatchArgument {
   group : Group
   parameterTypeName : String?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// StepMatchArgumentsList: list of step match arguments.
+#derive(ToJson, FromJson)
 pub struct StepMatchArgumentsList {
   stepMatchArguments : Array[StepMatchArgument]
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// TestStep: a step in a test case.
+#derive(ToJson, FromJson)
 pub struct TestStep {
   id : String
   hookId : String?
   pickleStepId : String?
   stepDefinitionIds : Array[String]?
   stepMatchArgumentsLists : Array[StepMatchArgumentsList]?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// TestCase: a test case (compiled from a pickle).
+#derive(ToJson, FromJson)
 pub struct TestCase {
   id : String
   pickleId : String
   testSteps : Array[TestStep]
   testRunStartedId : String?
-} derive(ToJson, FromJson)
+}
 
 ///|
 test "test case roundtrip" {

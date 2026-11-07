@@ -1,48 +1,54 @@
 ///|
 /// Comment: a comment in a Gherkin document.
+#derive(ToJson, FromJson)
 pub struct Comment {
   location : Location
   text : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Tag: a tag in a Gherkin document.
+#derive(ToJson, FromJson)
 pub struct Tag {
   location : Location
   name : String
   id : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// TableCell: a cell in a data table row.
+#derive(ToJson, FromJson)
 pub struct TableCell {
   location : Location
   value : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// TableRow: a row in a data table.
+#derive(ToJson, FromJson)
 pub struct TableRow {
   location : Location
   cells : Array[TableCell]
   id : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// DataTable: a data table in a step.
+#derive(ToJson, FromJson)
 pub struct DataTable {
   location : Location
   rows : Array[TableRow]
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// DocString: a doc string in a step.
+#derive(ToJson, FromJson)
 pub struct DocString {
   location : Location
   content : String
   delimiter : String
   mediaType : String?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// KeywordType: keyword type for a step.
@@ -87,6 +93,7 @@ pub impl ToJson for KeywordType with fn to_json(self) {
 
 ///|
 /// Step: a step in a scenario or background.
+#derive(ToJson, FromJson)
 pub struct Step {
   location : Location
   keyword : String
@@ -95,10 +102,11 @@ pub struct Step {
   keywordType : KeywordType?
   docString : DocString?
   dataTable : DataTable?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Background: a background in a feature or rule.
+#derive(ToJson, FromJson)
 pub struct Background {
   location : Location
   keyword : String
@@ -106,10 +114,11 @@ pub struct Background {
   description : String
   steps : Array[Step]
   id : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Examples: examples table for a scenario outline.
+#derive(ToJson, FromJson)
 pub struct Examples {
   location : Location
   tags : Array[Tag]
@@ -119,10 +128,11 @@ pub struct Examples {
   tableHeader : TableRow?
   tableBody : Array[TableRow]
   id : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Scenario: a scenario in a feature or rule.
+#derive(ToJson, FromJson)
 pub struct Scenario {
   location : Location
   tags : Array[Tag]
@@ -132,17 +142,19 @@ pub struct Scenario {
   steps : Array[Step]
   examples : Array[Examples]
   id : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// RuleChild: a child of a Rule (background or scenario).
+#derive(ToJson, FromJson)
 pub struct RuleChild {
   background : Background?
   scenario : Scenario?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Rule: a rule grouping scenarios in a feature.
+#derive(ToJson, FromJson)
 pub struct Rule {
   location : Location
   tags : Array[Tag]
@@ -151,18 +163,20 @@ pub struct Rule {
   description : String
   children : Array[RuleChild]
   id : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// FeatureChild: a child of a Feature (rule, background, or scenario).
+#derive(ToJson, FromJson)
 pub struct FeatureChild {
   rule : Rule?
   background : Background?
   scenario : Scenario?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Feature: a feature in a Gherkin document.
+#derive(ToJson, FromJson)
 pub struct Feature {
   location : Location
   tags : Array[Tag]
@@ -171,15 +185,16 @@ pub struct Feature {
   name : String
   description : String
   children : Array[FeatureChild]
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// GherkinDocument: parsed Gherkin AST.
+#derive(ToJson, FromJson)
 pub struct GherkinDocument {
   uri : String?
   feature : Feature?
   comments : Array[Comment]
-} derive(ToJson, FromJson)
+}
 
 ///|
 test "keyword type roundtrip" {
