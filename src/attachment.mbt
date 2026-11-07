@@ -37,6 +37,7 @@ pub impl ToJson for AttachmentContentEncoding with fn to_json(self) {
 
 ///|
 /// Attachment: embedded test artifact.
+#derive(ToJson, FromJson)
 pub struct Attachment {
   body : String
   contentEncoding : AttachmentContentEncoding
@@ -52,10 +53,11 @@ pub struct Attachment {
   testRunStartedId : String?
   testRunHookStartedId : String?
   timestamp : Timestamp?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// ExternalAttachment: linked test artifact.
+#derive(ToJson, FromJson)
 pub struct ExternalAttachment {
   url : String
   mediaType : String
@@ -63,7 +65,7 @@ pub struct ExternalAttachment {
   testStepId : String?
   testRunHookStartedId : String?
   timestamp : Timestamp?
-} derive(ToJson, FromJson)
+}
 
 ///|
 test "attachment content encoding roundtrip" {

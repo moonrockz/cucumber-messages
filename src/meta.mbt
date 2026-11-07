@@ -1,30 +1,34 @@
 ///|
 /// Product: name and optional version (Meta sub-type).
+#derive(ToJson, FromJson)
 pub struct Product {
   name : String
   version : String?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Git: remote, revision, optional branch and tag (Meta sub-type).
+#derive(ToJson, FromJson)
 pub struct Git {
   remote : String
   revision : String
   branch : String?
   tag : String?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Ci: CI environment (Meta sub-type).
+#derive(ToJson, FromJson)
 pub struct Ci {
   name : String
   url : String?
   buildNumber : String?
   git : Git?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// Meta: protocol metadata (protocolVersion, implementation, runtime, os, cpu, optional ci).
+#derive(ToJson, FromJson)
 pub struct Meta {
   protocolVersion : String
   implementation : Product
@@ -32,7 +36,7 @@ pub struct Meta {
   os : Product
   cpu : Product
   ci : Ci?
-} derive(ToJson, FromJson)
+}
 
 ///|
 test "meta decode and roundtrip" {

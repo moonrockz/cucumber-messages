@@ -1,42 +1,47 @@
 ///|
 /// Source: a source file (uri, data, mediaType).
+#derive(ToJson, FromJson)
 pub struct Source {
   uri : String
   data : String
   mediaType : SourceMediaType
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// JavaMethod: for SourceReference (Java glue).
+#derive(ToJson, FromJson)
 pub struct JavaMethod {
   className : String
   methodName : String
   methodParameterTypes : Array[String]
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// JavaStackTraceElement: for SourceReference.
+#derive(ToJson, FromJson)
 pub struct JavaStackTraceElement {
   className : String
   fileName : String
   methodName : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// SourceReference: points to a Source and optional Location (or Java method/stack).
+#derive(ToJson, FromJson)
 pub struct SourceReference {
   uri : String?
   javaMethod : JavaMethod?
   javaStackTraceElement : JavaStackTraceElement?
   location : Location?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// ParseError: parse error with source reference and message.
+#derive(ToJson, FromJson)
 pub struct ParseError {
   source : SourceReference
   message : String
-} derive(ToJson, FromJson)
+}
 
 ///|
 test "source roundtrip" {

@@ -105,21 +105,23 @@ pub impl ToJson for Hook with fn to_json(self) {
 
 ///|
 /// TestRunHookStarted: hook execution lifecycle.
+#derive(ToJson, FromJson)
 pub struct TestRunHookStarted {
   id : String
   testRunStartedId : String
   hookId : String
   timestamp : Timestamp
   workerId : String?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// TestRunHookFinished: hook execution finished.
+#derive(ToJson, FromJson)
 pub struct TestRunHookFinished {
   testRunHookStartedId : String
   result : TestStepResult
   timestamp : Timestamp
-} derive(ToJson, FromJson)
+}
 
 ///|
 test "hook type roundtrip" {

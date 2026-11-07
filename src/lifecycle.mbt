@@ -1,29 +1,32 @@
 ///|
 /// TestRunStarted: test run lifecycle.
+#derive(ToJson, FromJson)
 pub struct TestRunStarted {
   timestamp : Timestamp
   id : String?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// TestRunFinished: test run finished (success, timestamp, optional message, exception, testRunStartedId).
+#derive(ToJson, FromJson)
 pub struct TestRunFinished {
   message : String?
   success : Bool
   timestamp : Timestamp
   exception : Exception?
   testRunStartedId : String?
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// TestCaseStarted: test case attempt started.
+#derive(ToJson)
 pub struct TestCaseStarted {
   attempt : Int32
   id : String
   testCaseId : String
   workerId : String?
   timestamp : Timestamp
-} derive(ToJson)
+}
 
 ///|
 pub impl @json.FromJson for TestCaseStarted with fn from_json(json, path) {
@@ -39,32 +42,36 @@ pub impl @json.FromJson for TestCaseStarted with fn from_json(json, path) {
 
 ///|
 /// TestCaseFinished: test case attempt finished.
+#derive(ToJson, FromJson)
 pub struct TestCaseFinished {
   testCaseStartedId : String
   timestamp : Timestamp
   willBeRetried : Bool
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// TestStepStarted: step lifecycle.
+#derive(ToJson, FromJson)
 pub struct TestStepStarted {
   testCaseStartedId : String
   testStepId : String
   timestamp : Timestamp
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// TestStepFinished: step finished with result.
+#derive(ToJson, FromJson)
 pub struct TestStepFinished {
   testCaseStartedId : String
   testStepId : String
   testStepResult : TestStepResult
   timestamp : Timestamp
-} derive(ToJson, FromJson)
+}
 
 ///|
 /// UndefinedParameterType: reports undefined parameter type.
+#derive(ToJson, FromJson)
 pub struct UndefinedParameterType {
   expression : String
   name : String
-} derive(ToJson, FromJson)
+}

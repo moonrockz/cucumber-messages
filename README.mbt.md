@@ -10,6 +10,11 @@ Defines the standardized message types used by
 moon add moonrockz/cucumber-messages
 ```
 
+Version 0.6.0 and later need MoonBit 0.10.20 or newer (moonc
+`v0.10.20+65efd5b93`, moon `0.1.20261104`). These versions use the
+`#derive(...)` attribute syntax and the `moonbitlang/core/json` package API,
+which older toolchains do not accept. On an older toolchain, use version 0.5.0.
+
 ## What are Cucumber Messages?
 
 [Cucumber Messages](https://github.com/cucumber/messages) is a message protocol
