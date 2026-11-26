@@ -12,6 +12,9 @@ on:
     paths:
       - .github/workflows/copilot-setup-steps.yml
 
+env:
+  MOONBIT_VERSION: "1.0.0-rc1+3c0520448"
+
 jobs:
   # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
   copilot-setup-steps:
@@ -30,11 +33,12 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up MoonBit
-        run: |
-          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
-          echo "$HOME/.moon/bin" >> $GITHUB_PATH
+        uses: hustcer/setup-moonbit@v1.25
+        with:
+          version: ${{ env.MOONBIT_VERSION }}
+          core-version: ${{ env.MOONBIT_VERSION }}
 
       - name: Update MoonBit dependencies
         run: |
-            moon version --all
-            moon update
+          moon version --all
+          moon update

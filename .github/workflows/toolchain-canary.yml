@@ -1,8 +1,9 @@
 name: Toolchain Canary
 
-# CI installs the latest MoonBit toolchain on every run, and Renovate cannot
-# track it. Run the checks on a schedule so a toolchain change (a new
-# deprecation warning or a break) shows up here, not on an unrelated PR.
+# CI pins a MoonBit toolchain version, and Renovate cannot track upstream
+# releases. Run the checks on a schedule against the latest toolchain so a
+# toolchain change (a new deprecation warning or a break) shows up here before
+# we bump the pin.
 on:
   schedule:
     - cron: "0 6 * * 1" # Mondays 06:00 UTC
