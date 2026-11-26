@@ -11,9 +11,11 @@ moon add moonrockz/cucumber-messages
 ```
 
 Version 0.6.0 and later need MoonBit 0.10.20 or newer (moonc
-`v0.10.20+65efd5b93`, moon `0.1.20261104`). These versions use the
-`#derive(...)` attribute syntax and the `moonbitlang/core/json` package API,
-which older toolchains do not accept. On an older toolchain, use version 0.5.0.
+`v0.10.20+65efd5b93`, moon `0.1.20261104`) and are verified on MoonBit
+`1.0.0-rc1+3c0520448` (moonc `v1.0.0-rc1+3c0520448`, moon `0.1.20261126`).
+These versions use the `#derive(...)` attribute syntax and the
+`moonbitlang/core/json` package API, which older toolchains do not accept. On
+an older toolchain, use version 0.5.0.
 
 ## What are Cucumber Messages?
 
